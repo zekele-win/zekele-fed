@@ -83,15 +83,15 @@
 {/snippet}
 
 <header>
-  <div class="navbar border-b border-base-300 min-h-3">
+  <div class="navbar border-b border-base-300 min-h-6">
     <div class="navbar-start">
-      <a href="/">
+      <a class="mb-1.5" href="/">
         <img class="h-6" src={BrandIcon} alt="Zekele" />
       </a>
     </div>
 
     <div class="navbar-center">
-      <p>{i18n.name}</p>
+      <p class="not-sm:hidden">{i18n.name}</p>
     </div>
 
     <div class="navbar-end">

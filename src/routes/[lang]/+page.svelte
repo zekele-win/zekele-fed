@@ -164,15 +164,20 @@
   });
 </script>
 
-<h1 class="sr-only" id="main-name">{i18n.name}</h1>
+<h1
+  class="text-xl text-center text-base-content/70 my-3 sm:hidden sm:sr-only"
+  id="main-name"
+>
+  {i18n.name}
+</h1>
 
 <section
-  class="flex flex-col items-center justify-center w-full gap-6"
+  class="flex flex-col items-center justify-center w-full gap-9 mb-3"
   aria-labelledby="main-name"
 >
-  <div class="flex flex-col w-full mb-3">
+  <div class="flex flex-col w-full gap-3">
     <div
-      class="flex flex-col md:flex-row items-center justify-center w-full gap-0 md:gap-3"
+      class="flex flex-col sm:flex-row items-center justify-center w-full gap-0 sm:gap-3"
     >
       {#each fedData.rateProbs as rateProb, idx}
         <h2 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
@@ -228,7 +233,7 @@
     </section>
   </div>
 
-  <div class="flex flex-col items-center justify-center w-full gap-1 mb-3">
+  <div class="flex flex-col items-center justify-center w-full gap-1">
     <h2 class="text-sm text-base-content/70" id="fomc-meeting-countdown">
       {i18n.nextMeetingCountdown}
     </h2>
