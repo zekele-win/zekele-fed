@@ -1,0 +1,20 @@
+import type { Handle } from "@sveltejs/kit";
+import i18n from "$lib/i18n";
+import { type Lang } from "$lib/i18n/langs";
+
+export const handle: Handle = async ({ event, resolve }) => {
+  // console.log("handle hook:", event.url.pathname);
+
+  const lang = event.params.lang ? event.params.lang : "en";
+  const response = i18n[lang as Lang]
+    ? await resolve(event, {
+        transformPageChunk: ({ html }) => html.replace("###lang###", lang),
+      })
+    : await resolve(event);
+
+  if (response.status === 404) {
+    return Response.redirect(`${event.url.origin}/`, 302);
+  }
+
+  return response;
+};

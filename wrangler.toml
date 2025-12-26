@@ -1,0 +1,16 @@
+workers_dev = true
+
+name = "fed"
+main = ".svelte-kit/cloudflare/_worker.js"
+
+compatibility_date = "2025-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+assets = { binding = "ASSETS", directory = ".cloudflare/public" }
+
+kv_namespaces = [
+  { binding = "KV", id = "d81bcac66d554d3a9493bad219cd0016", preview_id = "0e65b42e98f74359af36105c7a5e8fd2" },
+]
+
+[observability]
+enabled = true
