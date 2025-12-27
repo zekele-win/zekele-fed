@@ -130,14 +130,12 @@
   </div>
 </header>
 
-<main class="place-items-center p-3">
-  <div class="max-w-6xl w-full">
-    {@render children()}
-  </div>
+<main class="place-items-center w-full p-3">
+  {@render children()}
 </main>
 
-<footer class="footer footer-center border-t border-base-300 text-sm p-3">
-  <div class="max-w-6xl text-base-content/70">
+<footer class="footer footer-center border-t border-base-300 p-3">
+  <div class="text-base-content/70 text-sm">
     <p>
       {i18n.dataSource.prefix}<a
         class="inline-text-link"
