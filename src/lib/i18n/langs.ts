@@ -3,17 +3,30 @@ const langs = {
     name: "English",
     aliases: ["en-us", "en-gb", "en-ca", "en-au"],
   },
+  ja: {
+    name: "日本語",
+    aliases: ["ja-jp"],
+  },
   "zh-hans": {
     name: "简体中文",
     aliases: [
       "zh-cn",
       "zh-hans-cn",
-      "zh-hk",
-      "zh-hans-hk",
-      "zh-mo",
-      "zh-hans-mo",
       "zh-sg",
       "zh-hans-sg",
+      "zh-my",
+      "zh-hans-my",
+    ],
+  },
+  "zh-hant": {
+    name: "繁體中文",
+    aliases: [
+      "zh-tw",
+      "zh-hant-tw",
+      "zh-hk",
+      "zh-hant-hk",
+      "zh-mo",
+      "zh-hant-mo",
     ],
   },
 };
