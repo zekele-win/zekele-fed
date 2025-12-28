@@ -28,7 +28,7 @@
     description: i18n.desc,
 
     url: page.url.href,
-    image: `${page.url.origin}/${lang}/slogan.png`,
+    image: `${page.url.origin}/slogan.png`,
 
     offers: {
       "@type": "Offer",
@@ -52,13 +52,13 @@
   <meta property="og:title" content={i18n.title} />
   <meta property="og:description" content={i18n.desc} />
   <meta property="og:url" content={page.url.href} />
-  <meta property="og:image" content="{page.url.origin}/{lang}/slogan.png" />
+  <meta property="og:image" content="{page.url.origin}/slogan.png" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={i18n.title} />
   <meta name="twitter:description" content={i18n.desc} />
-  <meta name="twitter:image" content="{page.url.origin}/{lang}/slogan.png" />
+  <meta name="twitter:image" content="{page.url.origin}/slogan.png" />
 
   <link rel="alternate" hreflang="x-default" href="{page.url.origin}/en" />
   {#each Object.keys(langs) as v}
