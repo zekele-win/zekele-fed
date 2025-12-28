@@ -140,26 +140,34 @@
     timer = null;
   };
 
-  const onActiveChange = () => {
-    const active =
-      document.visibilityState === "visible" && document.hasFocus();
+  const onVisibilityChange = () => {
     // console.log(
-    //   `Document active changed with active:${active} visibilityState:${document.visibilityState} hasFocus:${document.hasFocus()} at ${new Date().toISOString()}`
+    //   `onVisibilityChange: ${document.visibilityState} at ${new Date().toISOString()}`
     // );
-    active ? start() : stop();
+    document.visibilityState === "visible" ? start() : stop();
+  };
+
+  const onFocus = () => {
+    // console.log(`onFocus at ${new Date().toISOString()}`);
+    start();
+  };
+
+  const onBlur = () => {
+    // console.log(`onBlur at ${new Date().toISOString()}`);
+    stop();
   };
 
   onMount(() => {
-    onActiveChange();
+    start();
 
-    document.addEventListener("visibilitychange", onActiveChange);
-    window.addEventListener("focus", onActiveChange);
-    window.addEventListener("blur", onActiveChange);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("blur", onBlur);
 
     return () => {
-      document.removeEventListener("visibilitychange", onActiveChange);
-      window.removeEventListener("focus", onActiveChange);
-      window.removeEventListener("blur", onActiveChange);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("blur", onBlur);
     };
   });
 </script>
