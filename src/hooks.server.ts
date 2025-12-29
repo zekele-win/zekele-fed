@@ -18,3 +18,20 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   return response;
 };
+
+// !!!
+// The code below is used to export cloudflare worker scheduled.
+
+import type {
+  ScheduledController,
+  ExecutionContext,
+} from "@cloudflare/workers-types";
+import { refreshData } from "$lib/fed";
+
+export const scheduled = async (
+  controller: ScheduledController,
+  env: App.Env,
+  ctx: ExecutionContext
+) => {
+  ctx.waitUntil(refreshData(env));
+};

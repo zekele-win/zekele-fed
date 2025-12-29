@@ -1,5 +1,5 @@
 import type { FedData, RateProb } from "./types";
-import { getData } from "./store";
+import { getData, refreshData } from "./store";
 
 export type { FedData, RateProb };
-export { getData };
+export { getData, refreshData };
