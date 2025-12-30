@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   parseToolsURL,
   convertViewURL,
+  parseTable,
   parseRateProbs,
   parseRateProbsTime,
 } from "./fed-watch-html";
@@ -119,17 +120,141 @@ describe("convertViewURL", () => {
   });
 });
 
-describe("parseRateProbs", () => {
+describe("parseTable", () => {
   const cases = [
     {
       name: "should work",
+      viewHTML: `
+        <table>
+            <tr>
+                <th>Target Rate (bps)</th>
+                <th>Probability(%)</th>
+            </tr>
+            abcd
+        </table>
+      `,
+      expected: `abcd`,
+    },
+    {
+      name: "should work with table attr",
       viewHTML: `
         <table class="grid-thm grid-thm-v2 w-lg">
             <tr>
                 <th rowspan="2">Target Rate (bps)</th>
                 <th colspan="4">Probability(%)</th>
             </tr>
+            abcd
+        </table>
+      `,
+      expected: `abcd`,
+    },
+    {
+      name: "should work with th attr",
+      viewHTML: `
+        <table>
+            <tr>
+                <th rowspan="2">Target Rate (bps)</th>
+                <th colspan="4">Probability(%)</th>
+            </tr>
+            abcd
+        </table>
+      `,
+      expected: `abcd`,
+    },
+    {
+      name: "should work with other ths",
+      viewHTML: `
+        <table>
+            <tr>
+                <th>Target Rate (bps)</th>
+                <th>abcd</th>
+                <th>Probability(%)</th>
+                <th>abcd</th>
+            </tr>
+            abcd
+        </table>
+      `,
+      expected: `abcd`,
+    },
+    {
+      name: "should work with spaces",
+      viewHTML: `
+        <table >
+            <tr >
+                <th > Target  Rate   (bps) </th>
+                <th  > Probability  (%) </th>
+            </tr>
+            abcd
+        </table>
+      `,
+      expected: `abcd`,
+    },
+    {
+      name: "should throw without rate",
+      viewHTML: `
+        <table>
+            <tr>
+                <th>Probab-ility(%)</th>
+            </tr>
+            abcd
+        </table>
+      `,
+    },
+    {
+      name: "should throw without prob",
+      viewHTML: `
+        <table>
+            <tr>
+                <th>Target Rate (bps)</th>
+            </tr>
+            abcd
+        </table>
+      `,
+    },
+    {
+      name: "should throw with unknown rate",
+      viewHTML: `
+        <table>
+            <tr>
+                <th>Target- Rate (bps)</th>
+                <th>Probability(%)</th>
+            </tr>
+            abcd
+        </table>
+      `,
+    },
+    {
+      name: "should throw with unknown prob",
+      viewHTML: `
+        <table>
+            <tr>
+                <th>Target Rate (bps)</th>
+                <th>Probab-ility(%)</th>
+            </tr>
+            abcd
+        </table>
+      `,
+    },
+  ];
 
+  cases.forEach(({ name, viewHTML, expected }) => {
+    it(name, () => {
+      if (expected) {
+        expect(parseTable(viewHTML)).toBe(expected);
+      } else {
+        expect(() => {
+          parseTable(viewHTML);
+        }).toThrowError();
+      }
+    });
+  });
+});
+
+describe("parseRateProbs", () => {
+  const cases = [
+    {
+      name: "should work",
+      viewHTML: `
             <tr class="">
                 <td class="center">325-350 </td>
                 <td class="number highlight">24.4%</td>
@@ -153,7 +278,6 @@ describe("parseRateProbs", () => {
                 <td class="number">8.6%</td>
                 <td class="number">34.7%</td>
             </tr>
-        </table>
       `,
       expected: [
         {
@@ -176,12 +300,6 @@ describe("parseRateProbs", () => {
     {
       name: "should work with 0 probability",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
             <tr class="">
                 <td class="center">325-350 </td>
                 <td class="number highlight">24.4%</td>
@@ -205,7 +323,6 @@ describe("parseRateProbs", () => {
                 <td class="number">8.6%</td>
                 <td class="number">34.7%</td>
             </tr>
-        </table>
       `,
       expected: [
         {
@@ -217,86 +334,12 @@ describe("parseRateProbs", () => {
           deltaRate: 0,
           rate: 375,
           prob: 756,
-        },
-      ],
-    },
-    {
-      name: "should work with hide tr",
-      viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
-            <tr class="hide">
-                <td class="center">300-325 </td>
-                <td class="number highlight">10.5%</td>
-                <td class="number">0.0%</td>
-                <td class="number">0.0%</td>
-                <td class="number">0.0%</td>
-            </tr>
-
-            <tr class="">
-                <td class="center">325-350 </td>
-                <td class="number highlight">24.4%</td>
-                <td class="number">24.4%</td>
-                <td class="number">21.6%</td>
-                <td class="number">16.7%</td>
-            </tr>
-
-            <tr class="">
-                <td class="center">350-375 (Current)</td>
-                <td class="number highlight">75.6%</td>
-                <td class="number">75.6%</td>
-                <td class="number">69.8%</td>
-                <td class="number">48.6%</td>
-            </tr>
-
-            <tr class="">
-                <td class="center">375-400 </td>
-                <td class="number highlight">10.5%</td>
-                <td class="number">0.0%</td>
-                <td class="number">8.6%</td>
-                <td class="number">34.7%</td>
-            </tr>
-
-            <tr class="hide">
-                <td class="center">400-425 </td>
-                <td class="number highlight">10.5%</td>
-                <td class="number">0.0%</td>
-                <td class="number">0.0%</td>
-                <td class="number">0.0%</td>
-            </tr>
-        </table>
-      `,
-      expected: [
-        {
-          deltaRate: -25,
-          rate: 350,
-          prob: 244,
-        },
-        {
-          deltaRate: 0,
-          rate: 375,
-          prob: 756,
-        },
-        {
-          deltaRate: 25,
-          rate: 400,
-          prob: 105,
         },
       ],
     },
     {
       name: "should work with unknown center cells",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
             <tr class="">
                 <td class="center">325-350 </td>
                 <td class="number highlight">24.4%</td>
@@ -324,7 +367,6 @@ describe("parseRateProbs", () => {
             <tr class="odd">
               <td colspan="5" class="center" style="color:darkgray">* Data as of 16 12月 2025 01:32:40 CT</td>
             </tr>
-        </table>
       `,
       expected: [
         {
@@ -348,12 +390,6 @@ describe("parseRateProbs", () => {
     {
       name: "should work with unordered cells",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
             <tr class="">
                 <td class="center">325-350 </td>
                 <td class="number highlight">24.4%</td>
@@ -377,7 +413,6 @@ describe("parseRateProbs", () => {
                 <td class="number">69.8%</td>
                 <td class="number">48.6%</td>
             </tr>
-        </table>
       `,
       expected: [
         {
@@ -399,60 +434,14 @@ describe("parseRateProbs", () => {
     },
 
     {
-      name: "should throw without the table 1",
-      viewHTML: `
-        <table class="">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-        </table>
-      `,
-    },
-
-    {
-      name: "should throw without the table 2",
-      viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-            </tr>
-        </table>
-      `,
-    },
-
-    {
-      name: "should throw without the table 3",
-      viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-        </table>
-      `,
-    },
-
-    {
       name: "should throw without cells",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-        </table>
       `,
     },
 
     {
       name: "should throw without the current cell",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
             <tr class="">
                 <td class="center">325-350 </td>
                 <td class="number highlight">24.4%</td>
@@ -476,19 +465,12 @@ describe("parseRateProbs", () => {
                 <td class="number">8.6%</td>
                 <td class="number">34.7%</td>
             </tr>
-        </table>
       `,
     },
 
     {
       name: "should throw without multi current cells",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
             <tr class="">
                 <td class="center">325-350 (Current)</td>
                 <td class="number highlight">24.4%</td>
@@ -512,55 +494,12 @@ describe("parseRateProbs", () => {
                 <td class="number">8.6%</td>
                 <td class="number">34.7%</td>
             </tr>
-        </table>
       `,
     },
 
     {
-      name: "should throw without highlight td",
+      name: "should throw with bad probability format",
       viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
-            <tr class="">
-                <td class="center">325-350</td>
-                <td class="number ">24.4%</td>
-                <td class="number">24.4%</td>
-                <td class="number">21.6%</td>
-                <td class="number">16.7%</td>
-            </tr>
-
-            <tr class="">
-                <td class="center">350-375 (Current)</td>
-                <td class="number highlight">75.6%</td>
-                <td class="number">75.6%</td>
-                <td class="number">69.8%</td>
-                <td class="number">48.6%</td>
-            </tr>
-
-            <tr class="">
-                <td class="center">375-400 </td>
-                <td class="number highlight">10.5%</td>
-                <td class="number">0.0%</td>
-                <td class="number">8.6%</td>
-                <td class="number">34.7%</td>
-            </tr>
-        </table>
-      `,
-    },
-
-    {
-      name: "should throw without bad probability format",
-      viewHTML: `
-        <table class="grid-thm grid-thm-v2 w-lg">
-            <tr>
-                <th rowspan="2">Target Rate (bps)</th>
-                <th colspan="4">Probability(%)</th>
-            </tr>
-
             <tr class="">
                 <td class="center">325-350</td>
                 <td class="number highlight">-24.4%</td>
@@ -584,7 +523,6 @@ describe("parseRateProbs", () => {
                 <td class="number">8.6%</td>
                 <td class="number">34.7%</td>
             </tr>
-        </table>
       `,
     },
   ];

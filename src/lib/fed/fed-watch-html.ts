@@ -1,5 +1,3 @@
-import * as cheerio from "cheerio";
-import { Temporal } from "@js-temporal/polyfill";
 import { getQueryParam } from "../utils/url";
 import type { RateProb } from "./types";
 
@@ -103,84 +101,73 @@ async function fetchViewHTML(viewURL: string): Promise<string> {
   return viewHTML;
 }
 
-function parseRateProbs(viewHTML: string): RateProb[] {
-  // console.log("[fed-watch-html] parseRateProbs");
+function parseTable(viewHTML: string): string {
+  // console.log("[fed-watch-html] parseTable");
 
-  const $ = cheerio.load(viewHTML);
-  const tables = $("table.grid-thm");
-
-  let $theTable = undefined;
-  for (const table of tables.toArray()) {
-    const $table = $(table);
-    const trs = $table.find("tr");
-    for (const tr of trs.toArray()) {
-      const $tr = $(tr);
-      const trText = $tr.text().trim().toLowerCase();
-      if (trText.includes("target rate") && trText.includes("probability")) {
-        $theTable = $table;
-        break;
-      }
-    }
-    if ($theTable) {
-      break;
-    }
-  }
-  if (!$theTable) {
+  const match = viewHTML.match(
+    /<table[^>]*>\s*<tr[^>]*>[\s\S]*?<th[^>]*>\s*Target\s+Rate[\s\S]*?<\/th>[\s\S]*?<th[^>]*>\s*Probability[\s\S]*?<\/th>[\s\S]*?<\/tr>([\s\S]*?)<\/table>/i
+  );
+  if (!match) {
     throw new Error(
-      `[fed-watch-html] parseRateProbs - find table fail with viewHTML: ${viewHTML}`
+      `[fed-watch-html] parseTable - fail with viewHTML: ${viewHTML}`
     );
   }
+  const table = match[1].trim();
+  // console.log(`[fed-watch-html] parseTable - table: ${table}`);
+
+  return table;
+}
+
+function parseRateProbs(table: string): RateProb[] {
+  // console.log("[fed-watch-html] parseRateProbs");
 
   type Cell = { rate: number; prob: number };
   const cells: Cell[] = [];
   let currentCell: Cell | undefined = undefined;
 
-  $theTable.find("tr").each((_, tr) => {
-    const $tr = $(tr);
-    if ($tr.hasClass("hide")) return;
+  const regex =
+    /<tr[^>]*>\s*<td[^>]*>([^<]+?)<\/td>\s*<td[^>]*>([^<]*?)<\/td>[\s\S]*?<\/tr>/gi;
 
-    const targetRateTd = $tr.find("td.center");
-    if (targetRateTd.length !== 1) return;
-    const targetRateText = $(targetRateTd[0]).text().trim();
-    const targetRateTextMatch = targetRateText.match(
-      /^\d+\-(\d+)(\s*\(Current\))?$/i
-    );
-    if (!targetRateTextMatch) return;
-    const rate = Number(targetRateTextMatch[1]);
-    const isCurrent = !!targetRateTextMatch[2];
+  let match: RegExpExecArray | null;
+  while ((match = regex.exec(table))) {
+    const rateText = match[1].trim();
+    if (!rateText) continue;
+    // console.log(`[fed-watch-html] parseRateProbs - rateText: ${rateText}`);
+    const rateTextMatch = rateText.match(/^\d+\-(\d+)(\s*\(Current\))?$/i);
+    if (!rateTextMatch) continue;
+    const rate = Number(rateTextMatch[1]);
+    const isCurrent = !!rateTextMatch[2];
 
-    const probabilityTd = $tr.find("td.number.highlight");
-    if (probabilityTd.length !== 1) {
+    const probText = match[2].trim();
+    if (!probText) continue;
+    // console.log(`[fed-watch-html] parseRateProbs - probText: ${probText}`);
+    const probTextMatch = probText.match(/^(\d+\.\d)\s*%$/);
+    if (!probTextMatch) {
       throw new Error(
-        `[fed-watch-html] parseRateProbs - multi probability td with viewHTML: ${viewHTML}`
+        `[fed-watch-html] parseRateProbs - bad probability format with table: ${table}`
       );
     }
-    const probabilityText = $(probabilityTd[0]).text().trim();
-    const probabilityTextMatch = probabilityText.match(/^(\d+\.\d)\s*%$/);
-    if (!probabilityTextMatch) {
-      throw new Error(
-        `[fed-watch-html] parseRateProbs - bad probability format with viewHTML: ${viewHTML}`
-      );
-    }
-    const [v, f] = probabilityTextMatch[1].split(".");
+    const [v, f] = probTextMatch[1].split(".");
     const prob = Number(v + f.padEnd(1, "0"));
-    if (!isCurrent && prob === 0) return;
+
+    if (!isCurrent && prob === 0) continue;
 
     const cell = { rate, prob };
     if (isCurrent) {
       if (currentCell) {
         throw new Error(
-          `[fed-watch-html] parseRateProbs - dup current cell with viewHTML: ${viewHTML}`
+          `[fed-watch-html] parseRateProbs - dup current cell with table: ${table}`
         );
       }
       currentCell = cell;
     }
 
     cells.push(cell);
-  });
+  }
+
   if (!currentCell) {
     throw new Error(
-      `[fed-watch-html] parseRateProbs - empty current cell with viewHTML: ${viewHTML}`
+      `[fed-watch-html] parseRateProbs - empty current cell with table: ${table}`
     );
   }
 
@@ -198,30 +185,30 @@ function parseRateProbs(viewHTML: string): RateProb[] {
   return rateProbs;
 }
 
-function parseRateProbsTime(viewHTML: string): number {
+function parseRateProbsTime(table: string): number {
   // console.log("[fed-watch-html] parseRateProbsTime");
 
   const monthMap: Record<string, number> = {
-    Jan: 1,
-    Feb: 2,
-    Mar: 3,
-    Apr: 4,
-    May: 5,
-    Jun: 6,
-    Jul: 7,
-    Aug: 8,
-    Sep: 9,
-    Oct: 10,
-    Nov: 11,
-    Dec: 12,
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
   };
 
-  const regex =
-    /Data as of\s+(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{2,4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2}) CT\s*\</i;
-  const match = viewHTML.match(regex);
+  const match = table.match(
+    /Data as of\s+(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{2,4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})\s+CT\s*\</i
+  );
   if (!match) {
     throw new Error(
-      `[fed-watch-html] parseRateProbsTime - parse fail with viewHTML: ${viewHTML}`
+      `[fed-watch-html] parseRateProbsTime - match fail with table: ${table}`
     );
   }
 
@@ -233,39 +220,29 @@ function parseRateProbsTime(viewHTML: string): number {
   const minute = parseInt(match[5]);
   const second = parseInt(match[6]);
 
-  const zdt = Temporal.ZonedDateTime.from({
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    timeZone: "America/Chicago",
-  });
+  const chicagoOffsetHours = (() => {
+    const d = new Date(Date.UTC(year, month, day, hour, minute, second));
+    const tz = Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Chicago",
+      timeZoneName: "short",
+    }).formatToParts(d);
+    // console.log({ tz });
+    return tz.some((p) => p.value === "CDT") ? 5 : 6;
+  })();
 
-  const rateProbsDate = new Date(zdt.epochMilliseconds);
-  if (isNaN(rateProbsDate.getTime())) {
-    throw new Error(
-      `[fed-watch-html] parseRateProbsTime - invalid rateProbsDate with viewHTML: ${viewHTML}`
-    );
-  }
-  // console.log(
-  //   `[fed-watch-html] parseRateProbsTime - rateProbsDate: ${rateProbsDate}`
-  // );
+  const time =
+    Date.UTC(year, month, day, hour, minute, second) +
+    chicagoOffsetHours * 3600 * 1000;
+  // console.log(`[fed-watch-html] parseRateProbsTime - time: ${time}`);
 
-  const rateProbsTime = rateProbsDate.getTime();
-  // console.log(
-  //   `[fed-watch-html] parseRateProbsTime - rateProbsTime: ${rateProbsTime}`
-  // );
-
-  return rateProbsTime;
+  return time;
 }
 
 async function fetchData(): Promise<{
   rateProbs: RateProb[];
   rateProbsTime: number;
 }> {
-  let st;
+  // let st;
 
   // st = Date.now();
   // const entryHTML = await fetchEntryHTML();
@@ -278,19 +255,31 @@ async function fetchData(): Promise<{
   const viewURL =
     "https://cmegroup-tools.quikstrike.net/User/QuikStrikeView.aspx?viewitemid=IntegratedFedWatchTool&userId=lwolf&jobRole=&company=&companyType=";
 
-  st = Date.now();
+  // st = Date.now();
   const viewHTML = await fetchViewHTML(viewURL);
   // console.log(`[fed-watch-html] fetchViewHTML - elapse: ${Date.now() - st}ms`);
 
-  return {
-    rateProbs: parseRateProbs(viewHTML),
-    rateProbsTime: parseRateProbsTime(viewHTML),
-  };
+  // st = Date.now();
+  const table = parseTable(viewHTML);
+  // console.log(`[fed-watch-html] parseTable - elapse: ${Date.now() - st}ms`);
+
+  // st = Date.now();
+  const rateProbs = parseRateProbs(table);
+  // console.log(`[fed-watch-html] parseRateProbs - elapse: ${Date.now() - st}ms`);
+
+  // st = Date.now();
+  const rateProbsTime = parseRateProbsTime(table);
+  // console.log(
+  //   `[fed-watch-html] parseRateProbsTime - elapse: ${Date.now() - st}ms`
+  // );
+
+  return { rateProbs, rateProbsTime };
 }
 
 export {
   parseToolsURL,
   convertViewURL,
+  parseTable,
   parseRateProbs,
   parseRateProbsTime,
   fetchData,

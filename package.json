@@ -16,7 +16,6 @@
     "test": "npm run test:node -- --run && npm run test:browser -- --run && npm run test:e2e"
   },
   "devDependencies": {
-    "@js-temporal/polyfill": "^0.5.1",
     "@playwright/test": "^1.57.0",
     "@sveltejs/adapter-cloudflare": "^7.2.4",
     "@sveltejs/kit": "^2.49.1",
@@ -24,7 +23,6 @@
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^25.0.2",
     "@vitest/browser-playwright": "^4.0.15",
-    "cheerio": "^1.1.2",
     "daisyui": "^5.5.14",
     "playwright": "^1.57.0",
     "svelte": "^5.45.6",
