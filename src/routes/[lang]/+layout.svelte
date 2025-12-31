@@ -74,7 +74,8 @@
   {#each Object.keys(langs) as v}
     <li>
       <a
-        href="/"
+        data-sveltekit-reload
+        href="/{v}"
         onclick={() => changeLang(v)}
         class={`bg-base-100 transition-opacity ${v === lang ? "font-medium cursor-default" : "opacity-70 hover:opacity-100"}`}
       >
@@ -97,22 +98,6 @@
     </div>
 
     <div class="navbar-end">
-      <a
-        href={links.email}
-        class="btn btn-ghost opacity-70 hover:opacity-100 hover:bg-base-100 border-0 shrink-0 h-fit p-2"
-      >
-        <MailIcon class="h-4" />
-      </a>
-
-      <a
-        href={links.x}
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        class="btn btn-ghost opacity-70 hover:opacity-100 hover:bg-base-100 border-0 shrink-0 h-fit p-2"
-      >
-        <XIcon class="h-4" />
-      </a>
-
       <div class="dropdown dropdown-end">
         <button
           tabindex="0"
@@ -164,5 +149,19 @@
         new Date().getFullYear().toString()
       )}
     </p>
+
+    <div class="flex justify-center items-center gap-3">
+      <a href={links.email} class="inline-img-link">
+        <MailIcon class="h-4" />
+      </a>
+      <a
+        href={links.x}
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        class="inline-img-link"
+      >
+        <XIcon class="h-4" />
+      </a>
+    </div>
   </div>
 </footer>

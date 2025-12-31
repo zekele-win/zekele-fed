@@ -91,3 +91,7 @@
 .inline-text-link {
   @apply underline underline-offset-2 hover:text-base-content decoration-base-content/25 hover:decoration-base-content/50 transition-colors;
 }
+
+.inline-img-link {
+  @apply hover:text-base-content transition-colors;
+}
