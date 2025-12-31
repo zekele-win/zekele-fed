@@ -12,10 +12,6 @@ export const handle: Handle = async ({ event, resolve }) => {
       })
     : await resolve(event);
 
-  if (response.status === 404) {
-    return Response.redirect(`${event.url.origin}/`, 302);
-  }
-
   return response;
 };
 

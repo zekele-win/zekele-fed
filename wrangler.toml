@@ -1,4 +1,4 @@
-workers_dev = true
+# workers_dev = true
 
 name = "fed"
 main = ".svelte-kit/cloudflare/_worker.js"
@@ -27,6 +27,5 @@ crons = [
   # "0 */6 * * *",
 ]
 
-
 [observability]
-enabled = true
+enabled = false
