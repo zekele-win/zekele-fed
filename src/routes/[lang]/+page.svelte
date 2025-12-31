@@ -173,7 +173,7 @@
 </script>
 
 <h1
-  class="text-xl text-center text-base-content/70 my-3 sm:hidden sm:sr-only"
+  class="text-xl text-center text-base-content/70 tracking-wider my-3 sm:sr-only"
   id="main-name"
 >
   {i18n.name}
@@ -183,9 +183,9 @@
   class="flex flex-col items-center justify-center w-full gap-9 mb-3"
   aria-labelledby="main-name"
 >
-  <div class="flex flex-col w-full gap-3">
+  <div class="flex flex-col w-full gap-1">
     <div
-      class="flex flex-col sm:flex-row items-center justify-center w-full gap-0 sm:gap-3"
+      class="flex flex-col sm:flex-row items-center justify-center w-full gap-0 sm:gap-1"
     >
       {#each fedData.rateProbs as rateProb, idx}
         <h2 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
@@ -214,11 +214,21 @@
     <section
       class="flex items-center justify-center text-sm text-base-content/70 w-full gap-1"
     >
+      <span class="relative flex opacity-70 h-2 w-2">
+        <span
+          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success"
+          style="animation-duration: 4s;"
+        >
+        </span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-success">
+        </span>
+      </span>
       <span>{i18n.updateTime.prefix}</span>
       {#if rateProbsElapse}
         <time
           datetime={new Date(fedData.rateProbsTime).toISOString()}
           title={new Date(fedData.rateProbsTime).toLocaleString()}
+          class="tracking-wider"
         >
           {#if rateProbsElapse.days !== 0}
             <span>

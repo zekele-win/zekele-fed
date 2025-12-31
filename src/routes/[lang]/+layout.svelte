@@ -60,7 +60,9 @@
   <meta name="twitter:description" content={i18n.desc} />
   <meta name="twitter:image" content="{page.url.origin}/slogan.png" />
 
-  <link rel="alternate" hreflang="x-default" href="{page.url.origin}/en" />
+  <link rel="canonical" href="{page.url.origin}/{lang}" />
+
+  <link rel="alternate" hreflang="x-default" href={page.url.origin} />
   {#each Object.keys(langs) as v}
     <link rel="alternate" hreflang={v} href="{page.url.origin}/{v}" />
   {/each}
@@ -91,7 +93,7 @@
     </div>
 
     <div class="navbar-center">
-      <p class="not-sm:hidden">{i18n.name}</p>
+      <p class="tracking-wider not-sm:hidden">{i18n.name}</p>
     </div>
 
     <div class="navbar-end">
