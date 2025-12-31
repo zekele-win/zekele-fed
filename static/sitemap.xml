@@ -3,38 +3,63 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://zekele.com/</loc>
-    <lastmod>2025-12-27</lastmod>
+    <loc>https://zekele.com</loc>
+    <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zekele.com" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://zekele.com/en" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://zekele.com/ja" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://zekele.com/zh-hans" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://zekele.com/zh-hant" />
   </url>
 
   <url>
     <loc>https://zekele.com/en</loc>
-    <lastmod>2025-12-27</lastmod>
+    <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zekele.com" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://zekele.com/en" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://zekele.com/ja" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://zekele.com/zh-hans" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://zekele.com/zh-hant" />
   </url>
 
   <url>
     <loc>https://zekele.com/ja</loc>
-    <lastmod>2025-12-27</lastmod>
+    <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zekele.com" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://zekele.com/en" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://zekele.com/ja" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://zekele.com/zh-hans" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://zekele.com/zh-hant" />
   </url>
 
   <url>
     <loc>https://zekele.com/zh-hans</loc>
-    <lastmod>2025-12-27</lastmod>
+    <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zekele.com" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://zekele.com/en" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://zekele.com/ja" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://zekele.com/zh-hans" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://zekele.com/zh-hant" />
   </url>
 
   <url>
     <loc>https://zekele.com/zh-hant</loc>
-    <lastmod>2025-12-27</lastmod>
+    <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zekele.com" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://zekele.com/en" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://zekele.com/ja" />
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://zekele.com/zh-hans" />
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://zekele.com/zh-hant" />
   </url>
 
 </urlset>
