@@ -1,12 +1,12 @@
 export default {
-  title: "FOMC 下次利率變動機率 | Zekele",
-  desc: "查看下次 FOMC 會議的利率變動機率，包含升息、降息或維持不變的可能性與幅度，基於市場定價即時更新。",
+  title: "實時監測聯準會升降息機率 | Zekele",
+  desc: "實時監測聯準會(Fed)利率路徑。自動同步 CME FedWatch 官方數據，涵蓋加息、降息及維持不變機率。免刷新、零延遲，為您追蹤下次 FOMC 議息會議最新市場定價。",
 
-  name: "FOMC 利率預期",
+  name: "聯準會利率變動機率",
 
   cutProbability: "降息",
   noChangeProbability: "維持不變",
-  hikeProbability: "升息",
+  hikeProbability: "加息",
 
   cutProbabilityDescription: {
     prefix: "降息 ",
@@ -16,26 +16,26 @@ export default {
     suffix: "維持不變的機率為 ",
   },
   hikeProbabilityDescription: {
-    prefix: "升息 ",
+    prefix: "加息 ",
     suffix: " 個基點的機率為 ",
   },
 
-  nextMeetingCountdown: "下次 FOMC 會議倒數",
+  nextMeetingCountdown: "距離下次 FOMC 議息會議還有",
   days: "天",
-  hours: "小時",
-  minutes: "分鐘",
+  hours: "時",
+  minutes: "分",
   shortDays: "天",
   shortHours: "時",
   shortMinutes: "分",
 
   updateTime: {
     prefix: "",
-    suffix: "前更新",
+    suffix: "前",
   },
 
   dataSource: {
-    prefix: "資料來源：",
-    fedWatchTool: "CME FedWatch 工具",
+    prefix: "數據來源：",
+    fedWatchTool: "芝商所 FedWatch 工具",
     fomcMeetingCalendar: "FOMC 會議日程",
   },
 

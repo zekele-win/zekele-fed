@@ -1,45 +1,46 @@
 export default {
-  title: "FOMC Next Rate Change Probability | Zekele",
-  desc: "Current market-implied probabilities for the next FOMC meeting, including the magnitude of a rate hike, cut, or no change.",
+  title: "Live Watch: Fed Rate Hike/Cut Probabilities | Zekele",
+  desc: "Real-time monitoring of Fed interest rate paths. Automatically synced with CME FedWatch data, covering hike, cut, and hold probabilities. No refresh needed to track the latest FOMC market pricing.",
 
-  name: "FOMC Rate Probabilities",
+  name: "Fed Rate Change Probabilities",
 
   cutProbability: "Cut",
-  noChangeProbability: "No Change",
+  noChangeProbability: "Hold",
   hikeProbability: "Hike",
 
   cutProbabilityDescription: {
-    prefix: "Cut by ",
-    suffix: " basis points probability is ",
+    prefix: "Probability of a ",
+    suffix: " bps cut: ",
   },
   noChangeProbabilityDescription: {
-    suffix: "No change probability is ",
+    suffix: "Probability of a hold: ",
   },
   hikeProbabilityDescription: {
-    prefix: "Hike by ",
-    suffix: " basis points probability is ",
+    prefix: "Probability of a ",
+    suffix: " bps hike: ",
   },
 
-  nextMeetingCountdown: "Next FOMC meeting in",
+  nextMeetingCountdown: "Next FOMC Meeting In",
   days: "Days",
   hours: "Hours",
-  minutes: "Minutes",
+  minutes: "Mins",
   shortDays: "d",
   shortHours: "h",
   shortMinutes: "m",
 
   updateTime: {
-    prefix: "Updated",
-    suffix: "ago",
+    prefix: "",
+    suffix: " ago",
   },
 
   dataSource: {
-    prefix: "Data source: ",
+    prefix: "Source: ",
     fedWatchTool: "CME FedWatch Tool",
     fomcMeetingCalendar: "FOMC Meeting Calendar",
   },
 
-  disclaimer: "Disclaimer: For reference only. Not investment advice.",
+  disclaimer:
+    "Disclaimer: For informational purposes only, not investment advice.",
 
   copyright: "Copyright © ###year### Zekele.",
 };

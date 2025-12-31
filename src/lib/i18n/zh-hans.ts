@@ -1,8 +1,8 @@
 export default {
-  title: "FOMC 下次利率变动概率 | Zekele",
-  desc: "查看下次 FOMC 会议的利率变动概率，包含加息、降息或维持不变的可能性及对应幅度，基于市场定价实时更新。",
+  title: "实时监测美联储升降息概率 | Zekele",
+  desc: "实时监测美联储(Fed)利率路径。自动同步 CME FedWatch 官方数据，涵盖加息、降息及维持不变概率。免刷新、零延迟，为您追踪下次 FOMC 议息会议最新市场定价。",
 
-  name: "FOMC 利率预期",
+  name: "美联储利率变动概率",
 
   cutProbability: "降息",
   noChangeProbability: "维持不变",
@@ -20,7 +20,7 @@ export default {
     suffix: " 个基点的概率是 ",
   },
 
-  nextMeetingCountdown: "FOMC 下次会议倒计时",
+  nextMeetingCountdown: "距离下次 FOMC 议息会议还有",
   days: "天",
   hours: "时",
   minutes: "分",
@@ -30,7 +30,7 @@ export default {
 
   updateTime: {
     prefix: "",
-    suffix: "前更新",
+    suffix: "前",
   },
 
   dataSource: {
