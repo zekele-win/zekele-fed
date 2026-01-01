@@ -1,26 +1,44 @@
 # Zekele Fed
 
-A simple and lightweight tool to view the latest FOMC interest rate probabilities.  
-Designed for minimalism, fast loading, and easy integration as a widget.
+Real-time FOMC rate change probabilities, derived from CME FedWatch.
+No account, no refresh, fast and lightweight.
 
-## Features
+👉 https://zekele.com
 
-- Displays upcoming FOMC decision probabilities: rate hike, rate hold, rate cut.
-- Zero clutter – shows only relevant probabilities.
-- Mobile and desktop friendly.
-- Optimized for minimal memory and CPU usage.
+## What it does
 
-## Usage
+- Displays market-implied probabilities for the next FOMC rate decision
+- Data is derived from CME interest rate futures pricing
+- Automatically updates during market hours
 
-This project is primarily intended as a backend service that fetches and serves the latest FedWatch CME data.  
-Frontend integration can display it as a widget or standalone page.
+## Why Zekele Fed
+
+- Real-time updates (no manual refresh)
+- Fast parsing (HTML parsing optimized, ~4ms per run)
+- Clean UI (focused on probabilities, not clutter)
+- No paid API (data fetched from public CME FedWatch page)
+
+## Key Features
+
+- Cut / Hold / Hike probabilities
+- Countdown to next FOMC meeting
+- Last update time (market-based)
+- Multi-language support (i18n)
+- Server-side caching via Cloudflare KV
 
 ## Tech Stack
 
-- Server: Cloudflare Workers (or any serverless platform)
-- Data source: CME FedWatch Tool
-- Frontend: Minimal SvelteKit frontend (optional)
+- SvelteKit
+- Cloudflare Workers + KV
+- Scheduled Worker (cron)
+- No client-side polling
+- No external paid APIs
+
+## Notes
+
+- Data updates only when CME futures market is active
+- Not financial advice
 
 ## License
 
-Proprietary / Internal MVP – not open source at the moment.
+MIT

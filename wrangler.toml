@@ -14,16 +14,18 @@ kv_namespaces = [
 
 [triggers]
 crons = [
-  # 1. 周一至周四 (UTC)：全天每 5 分钟
+  # 1. Monday–Thursday (UTC): run every 5 minutes all day
   "*/5 * * * MON-THU",
 
-  # 2. 周五 (UTC)：00:00 到 21:55 每 5 分钟 (对应美东周五下午收盘前)
+  # 2. Friday (UTC): run every 5 minutes from 00:00 to 21:55
+  #    (before CME interest rate futures close on Friday afternoon ET)
   "*/5 0-21 * * FRI",
 
-  # 3. 周日 (UTC)：22:00 到 23:55 每 5 分钟 (对应美东周日傍晚开盘后)
+  # 3. Sunday (UTC): run every 5 minutes from 22:00 to 23:55
+  #    (after CME interest rate futures reopen on Sunday evening ET)
   "*/5 22-23 * * SUN",
 
-  # 4. 兜底策略：每 6 小时执行一次 (涵盖所有非活跃时段)
+  # 4. Fallback: run every 6 hours to cover inactive periods
   # "0 */6 * * *",
 ]
 
