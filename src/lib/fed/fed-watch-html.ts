@@ -1,9 +1,40 @@
+/**
+ * fed-watch-html.ts
+ *
+ * This module fetches and parses FOMC rate probabilities from
+ *   the CME FedWatch Tool by scraping its public HTML view.
+ *
+ * Overall flow:
+ *
+ * 1. Fetch CME FedWatch entry page
+ * 2. Extract embedded QuikStrike iframe URL
+ * 3. Convert tool URL to a static view URL
+ * 4. Fetch the rendered view HTML
+ * 5. Extract the FedWatch probability table
+ * 6. Parse:
+ *    - Rate probability distribution
+ *    - Data timestamp (Chicago time)
+ *
+ * Notes:
+ * - No official API is used
+ * - Parsing is regex-based for performance (Cloudflare CPU limits)
+ * - Designed to be stable, minimal, and dependency-free
+ */
+
 import { getQueryParam } from "../utils/url";
 import type { RateProb } from "./types";
 
 const ENTRY_URL =
   "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html";
 
+/**
+ * Fetch the CME FedWatch entry HTML page.
+ *
+ * This page contains an iframe pointing to the actual
+ * QuikStrike FedWatch tool.
+ *
+ * @returns Entry HTML
+ */
 async function fetchEntryHTML(): Promise<string> {
   // console.log("[fed-watch-html] fetchEntryHTML");
 
@@ -33,6 +64,12 @@ async function fetchEntryHTML(): Promise<string> {
   return entryHTML;
 }
 
+/**
+ * Parse the QuikStrike iframe URL from the entry HTML.
+ *
+ * @param entryHTML - Raw HTML of the FedWatch entry page
+ * @returns iframe src URL pointing to QuikStrikeTools
+ */
 function parseToolsURL(entryHTML: string): string {
   // console.log("[fed-watch-html] parseToolsURL");
 
@@ -51,6 +88,15 @@ function parseToolsURL(entryHTML: string): string {
   return toolsURL;
 }
 
+/**
+ * Convert QuikStrikeTools URL into a renderable view URL.
+ *
+ * The original tools page is not suitable for direct scraping,
+ *   so we replace it with its corresponding view template.
+ *
+ * @param toolsURL - iframe URL extracted from entry page
+ * @returns View URL that renders the FedWatch table
+ */
 function convertViewURL(toolsURL: string): string {
   // console.log("[fed-watch-html] convertViewURL");
 
@@ -71,6 +117,12 @@ function convertViewURL(toolsURL: string): string {
   return viewURL;
 }
 
+/**
+ * Fetch the rendered FedWatch view HTML.
+ *
+ * @param viewURL - QuikStrike view URL
+ * @returns View URL HTML
+ */
 async function fetchViewHTML(viewURL: string): Promise<string> {
   // console.log("[fed-watch-html] fetchViewHTML");
 
@@ -101,6 +153,15 @@ async function fetchViewHTML(viewURL: string): Promise<string> {
   return viewHTML;
 }
 
+/**
+ * Extract the FedWatch probability table from the view HTML.
+ *
+ * The table is identified by the "Target Rate" and "Probability"
+ *.  header cells to avoid dependency on class names.
+ *
+ * @param viewHTML - Rendered FedWatch HTML
+ * @returns Inner HTML of the probability table (rows only)
+ */
 function parseTable(viewHTML: string): string {
   // console.log("[fed-watch-html] parseTable");
 
@@ -118,6 +179,15 @@ function parseTable(viewHTML: string): string {
   return table;
 }
 
+/**
+ * Parse rate probabilities from the FedWatch table.
+ *
+ * Each row represents a target rate range and its probability.
+ * The "(Current)" row is used as the baseline for delta calculation.
+ *
+ * @param table - Inner HTML of the FedWatch table
+ * @returns Sorted rate probability list with deltaRate
+ */
 function parseRateProbs(table: string): RateProb[] {
   // console.log("[fed-watch-html] parseRateProbs");
 
@@ -150,6 +220,7 @@ function parseRateProbs(table: string): RateProb[] {
     const [v, f] = probTextMatch[1].split(".");
     const prob = Number(v + f.padEnd(1, "0"));
 
+    // Only keep non-zero probabilities unless it's the current rate
     if (!isCurrent && prob === 0) continue;
 
     const cell = { rate, prob };
@@ -185,6 +256,15 @@ function parseRateProbs(table: string): RateProb[] {
   return rateProbs;
 }
 
+/**
+ * Parse the "Data as of" timestamp from the FedWatch table.
+ *
+ * The time is published in Chicago local time (CT),
+ *   so DST (CDT / CST) must be handled manually.
+ *
+ * @param table - Inner HTML of the FedWatch table
+ * @returns Unix timestamp (milliseconds)
+ */
 function parseRateProbsTime(table: string): number {
   // console.log("[fed-watch-html] parseRateProbsTime");
 
@@ -220,6 +300,7 @@ function parseRateProbsTime(table: string): number {
   const minute = parseInt(match[5]);
   const second = parseInt(match[6]);
 
+  // Detect whether Chicago is in CDT or CST at the given time
   const chicagoOffsetHours = (() => {
     const d = new Date(Date.UTC(year, month, day, hour, minute, second));
     const tz = Intl.DateTimeFormat("en-US", {
@@ -238,6 +319,13 @@ function parseRateProbsTime(table: string): number {
   return time;
 }
 
+/**
+ * Fetch and parse FedWatch rate probabilities.
+ *
+ * This is the main entry used by cron jobs and APIs.
+ *
+ * @returns Parsed rate probabilities and data timestamp
+ */
 async function fetchData(): Promise<{
   rateProbs: RateProb[];
   rateProbsTime: number;
