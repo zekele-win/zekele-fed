@@ -42,5 +42,5 @@ export default {
   disclaimer:
     "免責事項：本サイトの情報は参照用であり、投資の助言を目的としたものではありません。",
 
-  copyright: "Copyright © ###year### Zekele.",
+  copyright: "Copyright © 2025-###year### Zekele.",
 };

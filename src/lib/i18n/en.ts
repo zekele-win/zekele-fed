@@ -42,5 +42,5 @@ export default {
   disclaimer:
     "Disclaimer: For informational purposes only, not investment advice.",
 
-  copyright: "Copyright © ###year### Zekele.",
+  copyright: "Copyright © 2025-###year### Zekele.",
 };

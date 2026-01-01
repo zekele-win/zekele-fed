@@ -41,5 +41,5 @@ export default {
 
   disclaimer: "免責聲明：本站資訊僅供參考，不構成任何投資建議。",
 
-  copyright: "Copyright © ###year### Zekele.",
+  copyright: "Copyright © 2025-###year### Zekele.",
 };
