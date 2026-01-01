@@ -8,6 +8,7 @@
   import ArrowDownIcon from "$lib/assets/arrow-down.svelte";
   import MailIcon from "$lib/assets/mail.svelte";
   import XIcon from "$lib/assets/x.svelte";
+  import GithubIcon from "$lib/assets/github.svelte";
 
   const { children, data }: LayoutProps = $props();
   const { i18n, lang } = (() => data)();
@@ -161,6 +162,14 @@
         class="inline-img-link"
       >
         <XIcon class="h-4" />
+      </a>
+      <a
+        href={links.github}
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        class="inline-img-link"
+      >
+        <GithubIcon class="h-4" />
       </a>
     </div>
   </div>
