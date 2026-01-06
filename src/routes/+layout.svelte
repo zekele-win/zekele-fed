@@ -5,8 +5,8 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href="/logo.png" sizes="any" type="image/png" />
   <link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
+  <link rel="icon" href="/logo.png" sizes="any" type="image/png" />
 
   <link rel="apple-touch-icon" href="/logo.png" sizes="any" type="image/png" />
 
