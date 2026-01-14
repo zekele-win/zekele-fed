@@ -41,7 +41,7 @@
     description: i18n.desc,
 
     url: page.url.href,
-    image: `${page.url.href}${page.url.pathname !== "/" ? "/" : ""}slogan.svg`,
+    image: `${page.url.href}${page.url.pathname !== "/" ? "/" : ""}slogan`,
 
     offers: {
       "@type": "Offer",
@@ -67,7 +67,7 @@
   <meta property="og:url" content={page.url.href} />
   <meta
     property="og:image"
-    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan.svg"
+    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan"
   />
 
   <!-- Twitter Card -->
@@ -76,7 +76,7 @@
   <meta name="twitter:description" content={i18n.desc} />
   <meta
     name="twitter:image"
-    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan.svg"
+    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan"
   />
 
   <link

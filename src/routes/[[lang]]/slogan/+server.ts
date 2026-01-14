@@ -88,7 +88,8 @@ export const GET: RequestHandler = async ({ params, url, platform }) => {
     }
   }
 
-  svg += `</svg>`;
+  svg += `
+</svg>`;
 
   return new Response(svg, {
     headers: {
