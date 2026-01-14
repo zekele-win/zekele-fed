@@ -14,7 +14,11 @@
   const { i18n, lang } = (() => data)();
 
   const getMainHostname = () => {
-    return page.url.hostname.split(".").at(-2) ?? page.url.hostname;
+    const hostname = page.url.hostname;
+    const cs = hostname.split(".");
+    const c2 = cs.at(-2);
+    const c1 = cs.at(-1);
+    return c2 && c1 ? `${c2}.${c1}` : hostname;
   };
 
   const getMainUrl = () => {
