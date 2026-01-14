@@ -176,10 +176,6 @@
   {i18n.name}
 </h1>
 
-<h2 class="text-center mb-3 sr-only" id="main-name">
-  {i18n.content}
-</h2>
-
 <section
   class="flex flex-col items-center justify-center w-full gap-9 mb-3"
   aria-labelledby="main-name"
@@ -190,9 +186,9 @@
         class="flex flex-col md:flex-row items-center justify-center w-full gap-0 md:gap-1"
       >
         {#each fedData.rateProbs as rateProb, idx}
-          <h3 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
+          <h2 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
             {formatRateProbDesc(rateProb)}
-          </h3>
+          </h2>
           <section
             class="flex flex-col items-center p-3 {formatRateProbsStyle(
               fedData.rateProbs,

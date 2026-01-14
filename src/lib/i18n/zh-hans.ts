@@ -3,7 +3,6 @@ export default {
   desc: "实时监测美联储(Fed)利率路径。自动同步 CME FedWatch 官方数据，涵盖加息、降息及维持不变概率。免刷新、零延迟，为您追踪下次 FOMC 议息会议最新市场定价。",
 
   name: "美联储利率概率",
-  content: "美联储升降息概率",
 
   noData: "等待数据 …",
 

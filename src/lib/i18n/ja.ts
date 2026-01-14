@@ -3,7 +3,6 @@ export default {
   desc: "FRB（米連邦準備制度理事会）の金利進路をリアルタイムで監視。CME FedWatchデータを自動同期し、利上げ、利下げ、据え置きの確率を網羅。最新の市場価格から次回のFOMC金利見通しを追跡。",
 
   name: "FRB金利確率",
-  content: "FRB利上げ・利下げ確率のリアルタ",
 
   noData: "データ取得中 …",
 
