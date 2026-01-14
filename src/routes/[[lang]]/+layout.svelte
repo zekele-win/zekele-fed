@@ -41,7 +41,7 @@
     description: i18n.desc,
 
     url: page.url.href,
-    image: `${page.url.origin}/slogan.png`,
+    image: `${page.url.href}${page.url.pathname !== "/" ? "/" : ""}slogan.svg`,
 
     offers: {
       "@type": "Offer",
@@ -65,13 +65,19 @@
   <meta property="og:title" content={i18n.title} />
   <meta property="og:description" content={i18n.desc} />
   <meta property="og:url" content={page.url.href} />
-  <meta property="og:image" content="{page.url.origin}/slogan.png" />
+  <meta
+    property="og:image"
+    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan.svg"
+  />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={i18n.title} />
   <meta name="twitter:description" content={i18n.desc} />
-  <meta name="twitter:image" content="{page.url.origin}/slogan.png" />
+  <meta
+    name="twitter:image"
+    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan.svg"
+  />
 
   <link
     rel="canonical"

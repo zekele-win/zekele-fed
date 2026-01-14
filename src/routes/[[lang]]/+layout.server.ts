@@ -5,13 +5,16 @@ import langs, { defLang, type Lang } from "$lib/i18n/langs";
 
 const supportedLangs = Object.keys(langs) as Lang[];
 
-function findCookieLang(cookies: Cookies): string | null {
+function findCookieLang(cookies: Cookies, url: URL): string | null {
   const cookieLang = cookies.get("lang")?.toLowerCase() as Lang | undefined;
   // console.log("cookieLang:", cookieLang);
 
   if (cookieLang && supportedLangs.includes(cookieLang)) {
     if (cookieLang !== defLang) {
-      redirect(302, `/${cookieLang}`);
+      redirect(
+        302,
+        `/${cookieLang}${url.pathname !== "/" ? url.pathname : ""}`
+      );
     }
     return cookieLang;
   }
@@ -19,7 +22,7 @@ function findCookieLang(cookies: Cookies): string | null {
   return null;
 }
 
-function findAcceptLang(request: Request): string | null {
+function findAcceptLang(request: Request, url: URL): string | null {
   const acceptLang = request.headers.get("accept-language")?.toLowerCase();
   // console.log("acceptLang:", acceptLang);
 
@@ -32,7 +35,7 @@ function findAcceptLang(request: Request): string | null {
         const info = langs[key];
         if (browserLang === key || info.aliases.includes(browserLang)) {
           if (key !== defLang) {
-            redirect(302, `/${key}`);
+            redirect(302, `/${key}${url.pathname !== "/" ? url.pathname : ""}`);
           }
           return key;
         }
@@ -43,10 +46,15 @@ function findAcceptLang(request: Request): string | null {
   return null;
 }
 
-export const load: LayoutServerLoad = async ({ params, cookies, request }) => {
+export const load: LayoutServerLoad = async ({
+  params,
+  cookies,
+  url,
+  request,
+}) => {
   let lang = params.lang ? params.lang.toLowerCase() : null;
-  if (!lang) lang = findCookieLang(cookies);
-  if (!lang) findAcceptLang(request);
+  if (!lang) lang = findCookieLang(cookies, url);
+  if (!lang) findAcceptLang(request, url);
   if (!lang) lang = defLang;
 
   if (!supportedLangs.includes(lang as Lang)) {
