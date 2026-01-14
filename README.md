@@ -3,8 +3,6 @@
 Real-time FOMC rate change probabilities, derived from CME FedWatch.
 No account, no refresh, fast and lightweight.
 
-👉 https://zekele.com
-
 ## What it does
 
 - Displays market-implied probabilities for the next FOMC rate decision

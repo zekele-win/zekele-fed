@@ -14,7 +14,7 @@ declare global {
     // interface PageState {}
 
     interface Env {
-      KV: KVNamespace;
+      KV_FED: KVNamespace;
     }
 
     interface Platform {

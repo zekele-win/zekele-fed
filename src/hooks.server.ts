@@ -1,6 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
 import i18n from "$lib/i18n";
-import { type Lang } from "$lib/i18n/langs";
+import { defLang, type Lang } from "$lib/i18n/langs";
 
 /**
  * Global request hook.
@@ -11,7 +11,9 @@ export const handle: Handle = async ({ event, resolve }) => {
   // console.log("handle hook:", event.url.pathname);
 
   // Determine language from route param, fallback to English
-  const lang = event.params.lang ? event.params.lang : "en";
+  const lang = event.params.lang
+    ? (event.params.lang.toLowerCase() as Lang)
+    : defLang;
 
   // If language is supported, inject it into HTML (used for <html lang="...">)
   const response = i18n[lang as Lang]

@@ -19,7 +19,7 @@
     try {
       const res = await fetch("/api/get-fed-data");
       const data = await res.json();
-      fedData = { ...data.fedData };
+      fedData = data.fedData;
       getFedDataTS = Date.now();
       // console.log({ fedData: JSON.stringify(fedData) });
     } catch (error) {
@@ -55,18 +55,18 @@
     }
   };
 
-  const formatRateProbsStyle = (rateProb: RateProb | null) => {
-    const maxRateProb = fedData.rateProbs
+  const formatRateProbsStyle = (rateProbs: RateProb[], rateProb: RateProb) => {
+    const maxRateProb = rateProbs
       .filter((c) => c.deltaRate !== 0)
       .reduce<RateProb | null>(
         (max, cur) => (!max || cur.prob > max.prob ? cur : max),
         null
       );
-    return !rateProb || rateProb !== maxRateProb ? "text-base-content/50" : "";
+    return rateProb !== maxRateProb ? "text-base-content/50" : "";
   };
 
   const calcRateProbsElapse = () => {
-    if (fedData.rateProbsTime === 0) return null;
+    if (!fedData) return null;
 
     const diff = Date.now() - fedData.rateProbsTime;
     const days = diff <= 0 ? 0 : Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -83,7 +83,7 @@
   let rateProbsElapse = $derived(calcRateProbsElapse());
 
   const calcMeetingCountdown = () => {
-    if (fedData.meetingTime === 0) return null;
+    if (!fedData) return null;
 
     const diff = fedData.meetingTime - Date.now();
     const days = diff <= 0 ? 0 : Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -172,110 +172,111 @@
   });
 </script>
 
-<h1
-  class="text-xl text-center text-base-content/70 tracking-wider my-3 sm:sr-only"
-  id="main-name"
->
+<h1 class="text-lg text-center mb-3 sr-only">
   {i18n.name}
 </h1>
+
+<h2 class="text-center mb-3 sr-only" id="main-name">
+  {i18n.content}
+</h2>
 
 <section
   class="flex flex-col items-center justify-center w-full gap-9 mb-3"
   aria-labelledby="main-name"
 >
-  <div class="flex flex-col w-full gap-1">
-    <div
-      class="flex flex-col sm:flex-row items-center justify-center w-full gap-0 sm:gap-1"
-    >
-      {#each fedData.rateProbs as rateProb, idx}
-        <h2 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
-          {formatRateProbDesc(rateProb)}
-        </h2>
+  {#if fedData}
+    <div class="flex flex-col w-full gap-1">
+      <div
+        class="flex flex-col md:flex-row items-center justify-center w-full gap-0 md:gap-1"
+      >
+        {#each fedData.rateProbs as rateProb, idx}
+          <h3 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
+            {formatRateProbDesc(rateProb)}
+          </h3>
+          <section
+            class="flex flex-col items-center p-3 {formatRateProbsStyle(
+              fedData.rateProbs,
+              rateProb
+            )}"
+            aria-labelledby="fomc-rate-probability-${idx + 1}"
+          >
+            <p class="text-base">{formatRateText(rateProb)}</p>
+            <p class="text-6xl">
+              {formatProbText(rateProb)}
+            </p>
+          </section>
+        {/each}
+      </div>
+
+      {#if rateProbsElapse}
         <section
-          class="flex flex-col items-center p-3
-        {formatRateProbsStyle(rateProb)}"
-          aria-labelledby="fomc-rate-probability-${idx + 1}"
+          class="flex items-center justify-center text-sm text-base-content/70 w-full gap-1"
         >
-          <p class="text-base">{formatRateText(rateProb)}</p>
-          <p class="text-6xl">
-            {formatProbText(rateProb)}
-          </p>
+          <span class="relative flex opacity-70 h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success"
+              style="animation-duration: 4s;"
+            >
+            </span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-success">
+            </span>
+          </span>
+          {#if rateProbsElapse.days || rateProbsElapse.hours || rateProbsElapse.minutes}
+            <span>{i18n.updateTime.prefix}</span>
+            <time
+              datetime={new Date(fedData.rateProbsTime).toISOString()}
+              title={new Date(fedData.rateProbsTime).toLocaleString()}
+            >
+              {#if rateProbsElapse.days !== 0}
+                <span>
+                  {rateProbsElapse.days}{i18n.shortDays}
+                </span>
+              {/if}
+              {#if rateProbsElapse.hours !== 0}
+                <span>
+                  {rateProbsElapse.hours}{i18n.shortHours}
+                </span>
+              {/if}
+              <span>
+                {rateProbsElapse.minutes}{i18n.shortMinutes}
+              </span>
+            </time>
+            <span>{i18n.updateTime.suffix}</span>
+          {:else}
+            <span>{i18n.updateTime.just}</span>
+          {/if}
         </section>
-      {:else}
-        <p
-          class="text-6xl text-base-content/70
-        {formatRateProbsStyle(null)}"
-        >
-          N/A
-        </p>
-      {/each}
+      {/if}
     </div>
 
-    <section
-      class="flex items-center justify-center text-sm text-base-content/70 w-full gap-1"
-    >
-      <span class="relative flex opacity-70 h-2 w-2">
-        <span
-          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success"
-          style="animation-duration: 4s;"
-        >
-        </span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-success">
-        </span>
-      </span>
-      <span>{i18n.updateTime.prefix}</span>
-      {#if rateProbsElapse}
-        <time
-          datetime={new Date(fedData.rateProbsTime).toISOString()}
-          title={new Date(fedData.rateProbsTime).toLocaleString()}
-          class="tracking-wider"
-        >
-          {#if rateProbsElapse.days !== 0}
-            <span>
-              {rateProbsElapse.days}{i18n.shortDays}
-            </span>
+    {#if meetingCountdown}
+      <div class="flex flex-col items-center justify-center w-full gap-1">
+        <h2 class="text-sm text-base-content/70" id="fomc-meeting-countdown">
+          {i18n.nextMeetingCountdown}
+        </h2>
+        <section class="flex gap-4" aria-labelledby="fomc-meeting-countdown">
+          {#if meetingCountdown.days !== 0}
+            <p>
+              <span class="text-3xl">{meetingCountdown.days}</span>
+              <span class="text-sm">{i18n.days}</span>
+            </p>
           {/if}
-          {#if rateProbsElapse.hours !== 0}
-            <span>
-              {rateProbsElapse.hours}{i18n.shortHours}
-            </span>
+          {#if meetingCountdown.hours !== 0}
+            <p>
+              <span class="text-3xl">{meetingCountdown.hours}</span>
+              <span class="text-sm">{i18n.hours}</span>
+            </p>
           {/if}
-          <span>
-            {rateProbsElapse.minutes}{i18n.shortMinutes}
-          </span>
-        </time>
-      {:else}
-        N/A
-      {/if}
-      <span>{i18n.updateTime.suffix}</span>
-    </section>
-  </div>
-
-  <div class="flex flex-col items-center justify-center w-full gap-1">
-    <h2 class="text-sm text-base-content/70" id="fomc-meeting-countdown">
-      {i18n.nextMeetingCountdown}
-    </h2>
-    <section class="flex gap-4" aria-labelledby="fomc-meeting-countdown">
-      {#if meetingCountdown}
-        {#if meetingCountdown.days !== 0}
           <p>
-            <span class="text-3xl">{meetingCountdown.days}</span>
-            <span class="text-sm">{i18n.days}</span>
+            <span class="text-3xl">{meetingCountdown.minutes}</span>
+            <span class="text-sm">{i18n.minutes}</span>
           </p>
-        {/if}
-        {#if meetingCountdown.hours !== 0}
-          <p>
-            <span class="text-3xl">{meetingCountdown.hours}</span>
-            <span class="text-sm">{i18n.hours}</span>
-          </p>
-        {/if}
-        <p>
-          <span class="text-3xl">{meetingCountdown.minutes}</span>
-          <span class="text-sm">{i18n.minutes}</span>
-        </p>
-      {:else}
-        <p class="text-3xl text-base-content/70">N/A</p>
-      {/if}
-    </section>
-  </div>
+        </section>
+      </div>
+    {/if}
+  {:else}
+    <p class="text-base-content/70 font-extralight text-3xl py-12">
+      {i18n.noData}
+    </p>
+  {/if}
 </section>

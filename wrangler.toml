@@ -9,7 +9,7 @@ compatibility_flags = ["nodejs_compat"]
 assets = { binding = "ASSETS", directory = ".cloudflare/public" }
 
 kv_namespaces = [
-  { binding = "KV", id = "d81bcac66d554d3a9493bad219cd0016", preview_id = "0e65b42e98f74359af36105c7a5e8fd2" },
+  { binding = "KV_FED", id = "ec88ec32d5934885b66648bd651e385a", preview_id = "e547cbdc7a804134b466a18b82fa9821" },
 ]
 
 [triggers]

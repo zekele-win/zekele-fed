@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import type { LayoutProps } from "./$types";
-  import langs, { type Lang } from "$lib/i18n/langs";
+  import langs, { defLang, type Lang } from "$lib/i18n/langs";
   import links from "$lib/meta/links";
   import BrandIcon from "$lib/assets/brand.svg";
   import LanguageIcon from "$lib/assets/language.svelte";
@@ -12,6 +12,14 @@
 
   const { children, data }: LayoutProps = $props();
   const { i18n, lang } = (() => data)();
+
+  const getMainHostname = () => {
+    return page.url.hostname.split(".").at(-2) ?? page.url.hostname;
+  };
+
+  const getMainUrl = () => {
+    return page.url.origin.replace(page.url.hostname, getMainHostname()) + "/";
+  };
 
   const changeLang = (newLang: string) => {
     document.cookie = `lang=${newLang}; path=/; max-age=${60 * 60 * 24 * 365}`;
@@ -61,11 +69,18 @@
   <meta name="twitter:description" content={i18n.desc} />
   <meta name="twitter:image" content="{page.url.origin}/slogan.png" />
 
-  <link rel="canonical" href="{page.url.origin}/{lang}" />
+  <link
+    rel="canonical"
+    href="{page.url.origin}{lang === defLang ? `/` : `/${lang}`}"
+  />
 
-  <link rel="alternate" hreflang="x-default" href={page.url.origin} />
+  <link rel="alternate" hreflang="x-default" href="{page.url.origin}/" />
   {#each Object.keys(langs) as v}
-    <link rel="alternate" hreflang={v} href="{page.url.origin}/{v}" />
+    <link
+      rel="alternate"
+      hreflang={v}
+      href="{page.url.origin}{v === defLang ? `/` : `/${v}`}"
+    />
   {/each}
 
   {@html `<script type="application/ld+json">${jsonLdString}<\/script>`}
@@ -76,7 +91,7 @@
     <li>
       <a
         data-sveltekit-reload
-        href="/{v}"
+        href={v === defLang ? "/" : `/${v}`}
         onclick={() => changeLang(v)}
         class={`bg-base-100 transition-opacity ${v === lang ? "font-medium cursor-default" : "opacity-70 hover:opacity-100"}`}
       >
@@ -89,13 +104,13 @@
 <header>
   <div class="navbar border-b border-base-300 min-h-6">
     <div class="navbar-start">
-      <a class="mb-1.5" href="/">
+      <a data-sveltekit-reload class="mb-1.5" href="/">
         <img class="h-6" src={BrandIcon} alt="Zekele" />
       </a>
     </div>
 
     <div class="navbar-center">
-      <p class="tracking-wider not-sm:hidden">{i18n.name}</p>
+      <p>{i18n.name}</p>
     </div>
 
     <div class="navbar-end">
@@ -149,6 +164,9 @@
         "###year###",
         new Date().getFullYear().toString()
       )}
+      <a data-sveltekit-reload class="inline-text-link" href={getMainUrl()}>
+        {getMainHostname()}
+      </a>
     </p>
 
     <div class="flex justify-center items-center gap-3">

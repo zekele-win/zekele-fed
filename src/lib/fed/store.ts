@@ -20,26 +20,19 @@ import { getMeetingTime } from "./fomc-meeting";
  * @param env - Cloudflare Worker environment
  * @returns Cached or fallback FedData
  */
-export async function getData(env: App.Env): Promise<FedData> {
+export async function getData(env: App.Env): Promise<FedData | null> {
   // console.log("[store] getData");
 
-  const cacheFedData: FedData | null = await env.KV.get("FED_DATA", "json");
-  if (cacheFedData) {
-    // console.log(
-    //   `[store] getData - cacheFedData: ${JSON.stringify(cacheFedData)}`
-    // );
-    return cacheFedData;
+  const cache: FedData | null = await env.KV_FED.get("FED_DATA", "json");
+  if (!cache) {
+    // console.log(`[option-store] getData ${asset} - no cache`);
+    return null;
   }
 
-  // Fallback data for cold start or KV miss
-  const fakeFedData: FedData = {
-    rateProbs: [],
-    rateProbsTime: 0,
-    meetingTime: 0,
-    cacheTime: Date.now(),
-  };
-  // console.log(`[store] getData - fakeFedData: ${JSON.stringify(fakeFedData)}`);
-  return fakeFedData;
+  const data = cache;
+  // console.log(`[option-store] getData ${asset}: ${JSON.stringify(data)}`);
+
+  return data;
 }
 
 /**
@@ -66,7 +59,7 @@ export async function refreshData(env: App.Env): Promise<void> {
       cacheTime: Date.now(),
     };
 
-    await env.KV.put("FED_DATA", JSON.stringify(fedData));
+    await env.KV_FED.put("FED_DATA", JSON.stringify(fedData));
 
     // console.log(`[store] refreshData - fedData: ${JSON.stringify(fedData)}`);
   } catch (error) {

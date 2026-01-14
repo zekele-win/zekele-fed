@@ -2,7 +2,10 @@ export default {
   title: "Live Watch: Fed Rate Hike/Cut Probabilities | Zekele",
   desc: "Real-time monitoring of Fed interest rate paths. Automatically synced with CME FedWatch data, covering hike, cut, and hold probabilities. No refresh needed to track the latest FOMC market pricing.",
 
-  name: "Fed Rate Change Probabilities",
+  name: "Fed Rate Probabilities",
+  content: "Fed Rate Hike/Cut Probabilities",
+
+  noData: "Waiting for data …",
 
   cutProbability: "Cut",
   noChangeProbability: "Hold",
@@ -20,7 +23,6 @@ export default {
     suffix: " bps hike: ",
   },
 
-  nextMeetingCountdown: "Next FOMC Meeting In",
   days: "Days",
   hours: "Hours",
   minutes: "Mins",
@@ -29,9 +31,12 @@ export default {
   shortMinutes: "m",
 
   updateTime: {
-    prefix: "",
-    suffix: " ago",
+    prefix: "Updated",
+    suffix: "ago",
+    just: "Just updated",
   },
+
+  nextMeetingCountdown: "Next FOMC Meeting In",
 
   dataSource: {
     prefix: "Source: ",
@@ -42,5 +47,5 @@ export default {
   disclaimer:
     "Disclaimer: For informational purposes only, not investment advice.",
 
-  copyright: "Copyright © 2025-###year### Zekele.",
+  copyright: "© 2025 - ###year###",
 };

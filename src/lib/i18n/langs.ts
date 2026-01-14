@@ -31,5 +31,6 @@ const langs = {
   },
 };
 
+export const defLang = "en";
 export type Lang = keyof typeof langs;
 export default langs;
