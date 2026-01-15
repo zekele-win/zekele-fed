@@ -1,6 +1,6 @@
 export default {
   title: "实时监测美联储升降息概率 | Zekele",
-  desc: "实时监测美联储(Fed)利率路径。自动同步 CME FedWatch 官方数据，涵盖加息、降息及维持不变概率。免刷新、零延迟，为您追踪下次 FOMC 议息会议最新市场定价。",
+  desc: "实时监测美联储(Fed)利率路径。自动同步 CME FedWatch 官方数据，涵盖加息、降息及维持不变概率。",
 
   name: "美联储利率变动概率",
 

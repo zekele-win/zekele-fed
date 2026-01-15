@@ -1,6 +1,6 @@
 export default {
   title: "實時監測聯準會升降息機率 | Zekele",
-  desc: "實時監測聯準會(Fed)利率路徑。自動同步 CME FedWatch 官方數據，涵蓋加息、降息及維持不變機率。免刷新、零延遲，為您追蹤下次 FOMC 議息會議最新市場定價。",
+  desc: "實時監測聯準會(Fed)利率路徑。自動同步 CME FedWatch 官方數據，涵蓋加息、降息及維持不變機率。",
 
   name: "聯準會利率變動機率",
 
