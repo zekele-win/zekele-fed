@@ -30,6 +30,16 @@
     }
   };
 
+  const isMaxProb = (rateProbs: RateProb[], rateProb: RateProb) => {
+    const maxRateProb = rateProbs
+      .filter((c) => c.deltaRate !== 0)
+      .reduce<RateProb | null>(
+        (max, cur) => (!max || cur.prob > max.prob ? cur : max),
+        null
+      );
+    return rateProb === maxRateProb;
+  };
+
   const formatRateText = (rateProb: RateProb) => {
     if (rateProb.deltaRate === 0) {
       return i18n.noChangeProbability;
@@ -53,16 +63,6 @@
     } else {
       return `${i18n.noChangeProbabilityDescription.suffix}${formatProbText(rateProb)}`;
     }
-  };
-
-  const formatRateProbsStyle = (rateProbs: RateProb[], rateProb: RateProb) => {
-    const maxRateProb = rateProbs
-      .filter((c) => c.deltaRate !== 0)
-      .reduce<RateProb | null>(
-        (max, cur) => (!max || cur.prob > max.prob ? cur : max),
-        null
-      );
-    return rateProb !== maxRateProb ? "text-base-content/50" : "";
   };
 
   const calcRateProbsElapse = () => {
@@ -172,7 +172,7 @@
   });
 </script>
 
-<h1 class="text-lg text-center mb-3 sr-only">
+<h1 class="text-lg text-center mb-3 md:sr-only">
   {i18n.name}
 </h1>
 
@@ -190,10 +190,12 @@
             {formatRateProbDesc(rateProb)}
           </h2>
           <section
-            class="flex flex-col items-center p-3 {formatRateProbsStyle(
+            class="flex flex-col items-center p-3 {isMaxProb(
               fedData.rateProbs,
               rateProb
-            )}"
+            )
+              ? ''
+              : 'text-base-content/50'}"
             aria-labelledby="fomc-rate-probability-${idx + 1}"
           >
             <p class="text-base">{formatRateText(rateProb)}</p>

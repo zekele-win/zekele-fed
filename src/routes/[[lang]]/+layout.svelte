@@ -29,6 +29,17 @@
     document.cookie = `lang=${newLang}; path=/; max-age=${60 * 60 * 24 * 365}`;
   };
 
+  const makeHreflang = (theLang: Lang) => {
+    const cur = `/${lang !== defLang ? lang : ""}`;
+    const the = `/${theLang !== defLang ? theLang : ""}`;
+    return (
+      page.url.origin +
+      (cur === the ? page.url.pathname : page.url.pathname.replace(cur, the))
+    );
+  };
+
+  const ogImageUrl = `${page.url.origin}/og/image?lang=${lang}`;
+
   const jsonLdString = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -41,7 +52,7 @@
     description: i18n.desc,
 
     url: page.url.href,
-    image: `${page.url.href}${page.url.pathname !== "/" ? "/" : ""}slogan`,
+    image: `${ogImageUrl}`,
 
     offers: {
       "@type": "Offer",
@@ -65,32 +76,19 @@
   <meta property="og:title" content={i18n.title} />
   <meta property="og:description" content={i18n.desc} />
   <meta property="og:url" content={page.url.href} />
-  <meta
-    property="og:image"
-    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan"
-  />
+  <meta property="og:image" content={ogImageUrl} />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={i18n.title} />
   <meta name="twitter:description" content={i18n.desc} />
-  <meta
-    name="twitter:image"
-    content="{page.url.href}{page.url.pathname !== '/' ? '/' : ''}slogan"
-  />
+  <meta name="twitter:image" content={ogImageUrl} />
 
-  <link
-    rel="canonical"
-    href="{page.url.origin}{lang === defLang ? `/` : `/${lang}`}"
-  />
+  <link rel="canonical" href={page.url.href} />
 
-  <link rel="alternate" hreflang="x-default" href="{page.url.origin}/" />
+  <link rel="alternate" hreflang="x-default" href={makeHreflang(defLang)} />
   {#each Object.keys(langs) as v}
-    <link
-      rel="alternate"
-      hreflang={v}
-      href="{page.url.origin}{v === defLang ? `/` : `/${v}`}"
-    />
+    <link rel="alternate" hreflang={v} href={makeHreflang(v as Lang)} />
   {/each}
 
   {@html `<script type="application/ld+json">${jsonLdString}<\/script>`}
@@ -119,7 +117,7 @@
       </a>
     </div>
 
-    <div class="navbar-center">
+    <div class="navbar-center not-md:hidden">
       <p>{i18n.name}</p>
     </div>
 
