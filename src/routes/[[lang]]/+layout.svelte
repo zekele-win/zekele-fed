@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import type { LayoutProps } from "./$types";
-  import langs, { defLang, type Lang } from "$lib/i18n/langs";
+  import { langs, defLang, type Lang } from "$lib/i18n";
   import links from "$lib/meta/links";
   import BrandIcon from "$lib/assets/brand.svg";
   import LanguageIcon from "$lib/assets/language.svelte";
@@ -29,13 +29,8 @@
     document.cookie = `lang=${newLang}; path=/; max-age=${60 * 60 * 24 * 365}`;
   };
 
-  const makeHreflang = (theLang: Lang) => {
-    const cur = `/${lang !== defLang ? lang : ""}`;
-    const the = `/${theLang !== defLang ? theLang : ""}`;
-    return (
-      page.url.origin +
-      (cur === the ? page.url.pathname : page.url.pathname.replace(cur, the))
-    );
+  const makeHreflang = (theLang: Lang | string) => {
+    return `/${langs[theLang as Lang].uri}`;
   };
 
   const ogImageUrl = `${page.url.origin}/og/image?lang=${lang}`;
@@ -88,7 +83,7 @@
 
   <link rel="alternate" hreflang="x-default" href={makeHreflang(defLang)} />
   {#each Object.keys(langs) as v}
-    <link rel="alternate" hreflang={v} href={makeHreflang(v as Lang)} />
+    <link rel="alternate" hreflang={v} href={makeHreflang(v)} />
   {/each}
 
   {@html `<script type="application/ld+json">${jsonLdString}<\/script>`}
@@ -99,7 +94,7 @@
     <li>
       <a
         data-sveltekit-reload
-        href={v === defLang ? "/" : `/${v}`}
+        href={makeHreflang(v)}
         onclick={() => changeLang(v)}
         class={`bg-base-100 transition-opacity ${v === lang ? "font-medium cursor-default" : "opacity-70 hover:opacity-100"}`}
       >
@@ -170,7 +165,7 @@
     <p>
       {i18n.copyright.replace(
         "###year###",
-        new Date().getFullYear().toString()
+        new Date().getFullYear().toString(),
       )}
       <a data-sveltekit-reload class="inline-text-link" href={getMainUrl()}>
         {getMainHostname()}

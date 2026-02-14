@@ -1,7 +1,7 @@
 import type { RequestHandler } from "./$types";
-import langs, { defLang, type Lang } from "$lib/i18n/langs";
+import { langs, defLang, type Lang } from "$lib/i18n";
 
-const pages = ["/"];
+const pages = [""];
 
 export const GET: RequestHandler = async ({ url, platform }) => {
   let content = `<?xml version="1.0" encoding="UTF-8"?>
@@ -12,18 +12,22 @@ export const GET: RequestHandler = async ({ url, platform }) => {
   for (const page of pages) {
     const hrefs = [];
     for (const lang in langs) {
-      const def = lang === defLang;
-      const href = def
-        ? `${url.origin}${page}`
-        : page === "/"
-        ? `${url.origin}/${lang}`
-        : `${url.origin}/${lang}${page}`;
-      hrefs.push({ lang, def, href });
+      const info = langs[lang as Lang];
+      const uri = info.uri;
+      const href =
+        !uri && !page
+          ? `${url.origin}/`
+          : !uri && page
+            ? `${url.origin}/${page}`
+            : uri && !page
+              ? `${url.origin}/${uri}`
+              : `${url.origin}/${uri}/${page}`;
+      hrefs.push({ lang, href });
     }
 
     let hreflangs = "";
-    for (const { lang, def, href } of hrefs) {
-      if (def) {
+    for (const { lang, href } of hrefs) {
+      if (lang === defLang) {
         hreflangs += `
     <xhtml:link rel="alternate" hreflang="x-default" href="${href}" />`;
       }

@@ -1,6 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
 import i18n from "$lib/i18n";
-import { defLang, type Lang } from "$lib/i18n/langs";
+import { defLang, type Lang } from "$lib/i18n";
 
 /**
  * Global request hook.
@@ -50,7 +50,7 @@ import { refreshData } from "$lib/fed";
 export const scheduled = async (
   controller: ScheduledController,
   env: App.Env,
-  ctx: ExecutionContext
+  ctx: ExecutionContext,
 ) => {
   ctx.waitUntil(refreshData(env));
 };

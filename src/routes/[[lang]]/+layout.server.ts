@@ -1,65 +1,44 @@
 import { error, redirect, type Cookies } from "@sveltejs/kit";
-import type { LayoutServerLoad } from "./$types";
-import i18n from "$lib/i18n";
-import langs, { defLang, type Lang } from "$lib/i18n/langs";
+import type { LayoutServerLoad, LayoutParams } from "./$types";
+import i18n, {
+  langs,
+  defLang,
+  findLangByParam,
+  findLangByCookie,
+  findLangByAccept,
+} from "$lib/i18n";
 
-const supportedLangs = Object.keys(langs) as Lang[];
-
-function findCookieLang(cookies: Cookies, url: URL): string | null {
-  const cookieLang = cookies.get("lang")?.toLowerCase() as Lang | undefined;
-  // console.log("cookieLang:", cookieLang);
-
-  if (cookieLang && supportedLangs.includes(cookieLang)) {
-    if (cookieLang !== defLang) {
-      redirect(
-        302,
-        `/${cookieLang}${url.pathname !== "/" ? url.pathname : ""}`
-      );
-    }
-    return cookieLang;
-  }
-
-  return null;
-}
-
-function findAcceptLang(request: Request, url: URL): string | null {
-  const acceptLang = request.headers.get("accept-language")?.toLowerCase();
-  // console.log("acceptLang:", acceptLang);
-
-  if (acceptLang) {
-    const browserLangs = acceptLang
-      .split(",")
-      .map((x) => x.split(";")[0].trim());
-    for (const browserLang of browserLangs) {
-      for (const key of supportedLangs) {
-        const info = langs[key];
-        if (browserLang === key || info.aliases.includes(browserLang)) {
-          if (key !== defLang) {
-            redirect(302, `/${key}${url.pathname !== "/" ? url.pathname : ""}`);
-          }
-          return key;
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
-export const load: LayoutServerLoad = async ({
-  params,
-  cookies,
-  url,
-  request,
-}) => {
-  let lang = params.lang ? params.lang.toLowerCase() : null;
-  if (!lang) lang = findCookieLang(cookies, url);
-  if (!lang) findAcceptLang(request, url);
-  if (!lang) lang = defLang;
-
-  if (!supportedLangs.includes(lang as Lang)) {
+export const load: LayoutServerLoad = async ({ params, cookies, request }) => {
+  const paramsLangStr = params.lang;
+  // console.log("paramsLangStr:", paramsLangStr);
+  const paramsLang = findLangByParam(paramsLangStr);
+  if (!paramsLang) {
     error(404, "Not Found");
   }
 
-  return { lang, i18n: i18n[lang as Lang] };
+  if (paramsLang !== defLang) {
+    return { lang: paramsLang, i18n: i18n[paramsLang] };
+  }
+
+  const cookieLangStr = cookies.get("lang");
+  // console.log("cookieLangStr:", cookieLangStr);
+  const cookieLang = findLangByCookie(cookieLangStr);
+  if (cookieLang) {
+    if (cookieLang !== paramsLang) {
+      redirect(302, `/${langs[cookieLang].uri}`);
+    }
+    return { lang: cookieLang, i18n: i18n[cookieLang] };
+  }
+
+  const acceptLangStr = request.headers.get("accept-language");
+  // console.log("acceptLangStr:", acceptLangStr);
+  const acceptLang = findLangByAccept(acceptLangStr);
+  if (acceptLang) {
+    if (acceptLang !== paramsLang) {
+      redirect(302, `/${langs[acceptLang].uri}`);
+    }
+    return { lang: acceptLang, i18n: i18n[acceptLang] };
+  }
+
+  return { lang: defLang, i18n: i18n[defLang] };
 };

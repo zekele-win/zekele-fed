@@ -1,7 +1,7 @@
 import type { RequestHandler } from "./$types";
 import brandSvgRaw from "$lib/assets/brand.svg?raw";
 import i18ns from "$lib/i18n";
-import { type Lang } from "$lib/i18n/langs";
+import { type Lang } from "$lib/i18n";
 import { getData, type RateProb } from "$lib/fed";
 
 const isMaxProb = (rateProbs: RateProb[], rateProb: RateProb) => {
