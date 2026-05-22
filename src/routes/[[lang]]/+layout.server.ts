@@ -16,6 +16,12 @@ export const load: LayoutServerLoad = async ({ params, cookies, request }) => {
     error(404, "Not Found");
   }
 
+  // Return `paramsLang` directly, even if it doesn't match cookie or accept-language.
+  // Otherwise SEO engine will be confused if we keep redirecting to different hreflang based on cookie or accept-language.
+  if (paramsLang) {
+    return { lang: paramsLang, i18n: i18n[paramsLang] };
+  }
+
   if (paramsLang !== defLang) {
     return { lang: paramsLang, i18n: i18n[paramsLang] };
   }
