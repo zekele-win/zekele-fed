@@ -6,6 +6,8 @@ export default {
 
   noData: "Waiting for data …",
 
+  currentRateRange: "Current Rate Range",
+
   cutProbability: "Cut",
   noChangeProbability: "Hold",
   hikeProbability: "Hike",

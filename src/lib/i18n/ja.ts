@@ -6,6 +6,8 @@ export default {
 
   noData: "データ取得中 …",
 
+  currentRateRange: "現在の金利範囲",
+
   cutProbability: "利下げ",
   noChangeProbability: "据え置き",
   hikeProbability: "利上げ",

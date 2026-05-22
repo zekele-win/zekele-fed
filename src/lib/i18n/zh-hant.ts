@@ -6,6 +6,8 @@ export default {
 
   noData: "資料載入中 …",
 
+  currentRateRange: "當前利率範圍",
+
   cutProbability: "降息",
   noChangeProbability: "維持不變",
   hikeProbability: "加息",
