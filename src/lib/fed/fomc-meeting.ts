@@ -18,6 +18,15 @@ const MEETING_CALENDAR = [
   "2026-09-16T18:00Z",
   "2026-10-28T19:00Z",
   "2026-12-09T19:00Z",
+
+  "2027-01-27T19:00Z",
+  "2027-03-17T18:00Z",
+  "2027-04-28T18:00Z",
+  "2027-06-09T18:00Z",
+  "2027-07-28T18:00Z",
+  "2027-09-15T18:00Z",
+  "2027-10-27T19:00Z",
+  "2027-12-08T19:00Z",
 ];
 
 /**
@@ -38,6 +47,6 @@ export function getMeetingTime(currentTime: number = Date.now()): number {
   }
 
   throw new Error(
-    "[fomc-meeting] getMeetingTime - No upcoming FOMC meeting date found."
+    "[fomc-meeting] getMeetingTime - No upcoming FOMC meeting date found.",
   );
 }
