@@ -30,12 +30,23 @@
     }
   };
 
+  const getCurrentRateProb = () => {
+    if (!fedData) return null;
+    return fedData.rateProbs.find((c) => c.deltaRate === 0) || null;
+  };
+
+  let currentRateProb = $derived(getCurrentRateProb());
+
+  const formatRateRangeText = (rateProb: RateProb) => {
+    return `${(rateProb.fromRate / 100).toFixed(2)}% - ${(rateProb.rate / 100).toFixed(2)}%`;
+  };
+
   const isMaxProb = (rateProbs: RateProb[], rateProb: RateProb) => {
     const maxRateProb = rateProbs
       .filter((c) => c.deltaRate !== 0)
       .reduce<RateProb | null>(
         (max, cur) => (!max || cur.prob > max.prob ? cur : max),
-        null
+        null,
       );
     return rateProb === maxRateProb;
   };
@@ -177,22 +188,38 @@
 </h1>
 
 <section
-  class="flex flex-col items-center justify-center w-full gap-9 mb-3"
+  class="flex flex-col items-center justify-center w-full"
   aria-labelledby="main-name"
 >
   {#if fedData}
+    {#if currentRateProb}
+      <div class="flex flex-col items-center justify-center w-full gap-1 mb-3">
+        <h2 class="text-sm text-base-content/70" id="fomc-current-rate-range">
+          {i18n.currentRateRange}
+        </h2>
+        <section
+          class="flex flex-col items-center justify-center w-full"
+          aria-labelledby="fomc-current-rate-range"
+        >
+          <p class="text-2xl text-base-content/80">
+            {formatRateRangeText(currentRateProb)}
+          </p>
+        </section>
+      </div>
+    {/if}
+
     <div class="flex flex-col w-full gap-1">
       <div
-        class="flex flex-col md:flex-row items-center justify-center w-full gap-0 md:gap-1"
+        class="flex flex-col md:flex-row items-center justify-center w-full gap-0 md:gap-3"
       >
         {#each fedData.rateProbs as rateProb, idx}
           <h2 class="sr-only" id={`fomc-rate-probability-${idx + 1}`}>
             {formatRateProbDesc(rateProb)}
           </h2>
           <section
-            class="flex flex-col items-center p-3 {isMaxProb(
+            class="flex flex-col items-center p-1 {isMaxProb(
               fedData.rateProbs,
-              rateProb
+              rateProb,
             )
               ? ''
               : 'text-base-content/50'}"
@@ -248,11 +275,14 @@
     </div>
 
     {#if meetingCountdown}
-      <div class="flex flex-col items-center justify-center w-full gap-1">
+      <div class="flex flex-col items-center justify-center w-full gap-1 mt-5">
         <h2 class="text-sm text-base-content/70" id="fomc-meeting-countdown">
           {i18n.nextMeetingCountdown}
         </h2>
-        <section class="flex gap-4" aria-labelledby="fomc-meeting-countdown">
+        <section
+          class="flex gap-4 text-base-content/80"
+          aria-labelledby="fomc-meeting-countdown"
+        >
           {#if meetingCountdown.days !== 0}
             <p>
               <span class="text-3xl">{meetingCountdown.days}</span>
