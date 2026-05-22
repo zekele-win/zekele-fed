@@ -54,7 +54,7 @@ async function fetchEntryHTML(): Promise<string> {
 
   if (!res.ok) {
     throw new Error(
-      `[fed-watch-html] fetchEntryHTML - http fail with status: ${res.status}`
+      `[fed-watch-html] fetchEntryHTML - http fail with status: ${res.status}`,
     );
   }
 
@@ -78,7 +78,7 @@ function parseToolsURL(entryHTML: string): string {
   const match = entryHTML.match(regex);
   if (!match) {
     throw new Error(
-      `[fed-watch-html] parseToolsURL - parse fail with entryHTML: ${entryHTML}`
+      `[fed-watch-html] parseToolsURL - parse fail with entryHTML: ${entryHTML}`,
     );
   }
 
@@ -105,11 +105,11 @@ function convertViewURL(toolsURL: string): string {
 
   const viewURL = toolsURL.replace(
     /User\/QuikStrikeTools\.aspx/i,
-    `User/${viewParam}.aspx`
+    `User/${viewParam}.aspx`,
   );
   if (viewURL === toolsURL) {
     throw new Error(
-      `[fed-watch-html] convertViewURL - replace fail with toolsURL: ${toolsURL}`
+      `[fed-watch-html] convertViewURL - replace fail with toolsURL: ${toolsURL}`,
     );
   }
   // console.log(`[fed-watch-html] convertViewURL - viewURL: ${viewURL}`);
@@ -143,7 +143,7 @@ async function fetchViewHTML(viewURL: string): Promise<string> {
 
   if (!res.ok) {
     throw new Error(
-      `[fed-watch-html] fetchViewHTML - http fail with status: ${res.status}`
+      `[fed-watch-html] fetchViewHTML - http fail with status: ${res.status}`,
     );
   }
 
@@ -166,11 +166,11 @@ function parseTable(viewHTML: string): string {
   // console.log("[fed-watch-html] parseTable");
 
   const match = viewHTML.match(
-    /<table[^>]*>\s*<tr[^>]*>[\s\S]*?<th[^>]*>\s*Target\s+Rate[\s\S]*?<\/th>[\s\S]*?<th[^>]*>\s*Probability[\s\S]*?<\/th>[\s\S]*?<\/tr>([\s\S]*?)<\/table>/i
+    /<table[^>]*>\s*<tr[^>]*>[\s\S]*?<th[^>]*>\s*Target\s+Rate[\s\S]*?<\/th>[\s\S]*?<th[^>]*>\s*Probability[\s\S]*?<\/th>[\s\S]*?<\/tr>([\s\S]*?)<\/table>/i,
   );
   if (!match) {
     throw new Error(
-      `[fed-watch-html] parseTable - fail with viewHTML: ${viewHTML}`
+      `[fed-watch-html] parseTable - fail with viewHTML: ${viewHTML}`,
     );
   }
   const table = match[1].trim();
@@ -191,7 +191,7 @@ function parseTable(viewHTML: string): string {
 function parseRateProbs(table: string): RateProb[] {
   // console.log("[fed-watch-html] parseRateProbs");
 
-  type Cell = { rate: number; prob: number };
+  type Cell = { fromRate: number; rate: number; prob: number };
   const cells: Cell[] = [];
   let currentCell: Cell | undefined = undefined;
 
@@ -203,10 +203,11 @@ function parseRateProbs(table: string): RateProb[] {
     const rateText = match[1].trim();
     if (!rateText) continue;
     // console.log(`[fed-watch-html] parseRateProbs - rateText: ${rateText}`);
-    const rateTextMatch = rateText.match(/^\d+\-(\d+)(\s*\(Current\))?$/i);
+    const rateTextMatch = rateText.match(/^(\d+)\-(\d+)(\s*\(Current\))?$/i);
     if (!rateTextMatch) continue;
-    const rate = Number(rateTextMatch[1]);
-    const isCurrent = !!rateTextMatch[2];
+    const fromRate = Number(rateTextMatch[1]);
+    const rate = Number(rateTextMatch[2]);
+    const isCurrent = !!rateTextMatch[3];
 
     const probText = match[2].trim();
     if (!probText) continue;
@@ -214,7 +215,7 @@ function parseRateProbs(table: string): RateProb[] {
     const probTextMatch = probText.match(/^(\d+\.\d)\s*%$/);
     if (!probTextMatch) {
       throw new Error(
-        `[fed-watch-html] parseRateProbs - bad probability format with table: ${table}`
+        `[fed-watch-html] parseRateProbs - bad probability format with table: ${table}`,
       );
     }
     const [v, f] = probTextMatch[1].split(".");
@@ -223,11 +224,11 @@ function parseRateProbs(table: string): RateProb[] {
     // Only keep non-zero probabilities unless it's the current rate
     if (!isCurrent && prob === 0) continue;
 
-    const cell = { rate, prob };
+    const cell = { fromRate, rate, prob };
     if (isCurrent) {
       if (currentCell) {
         throw new Error(
-          `[fed-watch-html] parseRateProbs - dup current cell with table: ${table}`
+          `[fed-watch-html] parseRateProbs - dup current cell with table: ${table}`,
         );
       }
       currentCell = cell;
@@ -238,7 +239,7 @@ function parseRateProbs(table: string): RateProb[] {
 
   if (!currentCell) {
     throw new Error(
-      `[fed-watch-html] parseRateProbs - empty current cell with table: ${table}`
+      `[fed-watch-html] parseRateProbs - empty current cell with table: ${table}`,
     );
   }
 
@@ -284,11 +285,11 @@ function parseRateProbsTime(table: string): number {
   };
 
   const match = table.match(
-    /Data as of\s+(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{2,4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})\s+CT\s*\</i
+    /Data as of\s+(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{2,4})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})\s+CT\s*\</i,
   );
   if (!match) {
     throw new Error(
-      `[fed-watch-html] parseRateProbsTime - match fail with table: ${table}`
+      `[fed-watch-html] parseRateProbsTime - match fail with table: ${table}`,
     );
   }
 

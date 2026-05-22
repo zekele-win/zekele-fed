@@ -282,16 +282,19 @@ describe("parseRateProbs", () => {
       expected: [
         {
           deltaRate: -25,
+          fromRate: 325,
           rate: 350,
           prob: 244,
         },
         {
           deltaRate: 0,
+          fromRate: 350,
           rate: 375,
           prob: 756,
         },
         {
           deltaRate: 25,
+          fromRate: 375,
           rate: 400,
           prob: 105,
         },
@@ -327,11 +330,13 @@ describe("parseRateProbs", () => {
       expected: [
         {
           deltaRate: -25,
+          fromRate: 325,
           rate: 350,
           prob: 244,
         },
         {
           deltaRate: 0,
+          fromRate: 350,
           rate: 375,
           prob: 756,
         },
@@ -371,16 +376,19 @@ describe("parseRateProbs", () => {
       expected: [
         {
           deltaRate: -25,
+          fromRate: 325,
           rate: 350,
           prob: 244,
         },
         {
           deltaRate: 0,
+          fromRate: 350,
           rate: 375,
           prob: 756,
         },
         {
           deltaRate: 25,
+          fromRate: 375,
           rate: 400,
           prob: 105,
         },
@@ -417,16 +425,19 @@ describe("parseRateProbs", () => {
       expected: [
         {
           deltaRate: -25,
+          fromRate: 325,
           rate: 350,
           prob: 244,
         },
         {
           deltaRate: 0,
+          fromRate: 350,
           rate: 375,
           prob: 756,
         },
         {
           deltaRate: 25,
+          fromRate: 375,
           rate: 400,
           prob: 105,
         },

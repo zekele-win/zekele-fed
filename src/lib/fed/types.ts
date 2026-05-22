@@ -1,5 +1,6 @@
 export type RateProb = {
   deltaRate: number;
+  fromRate: number;
   rate: number;
   prob: number;
 };
