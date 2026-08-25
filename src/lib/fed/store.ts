@@ -9,7 +9,7 @@
 
 import type { FedData } from "./types";
 import { fetchData } from "./fed-watch-html";
-import { getMeetingTime } from "./fomc-meeting";
+import { getMeetingTime } from "./fomc-meeting-html";
 
 /**
  * Get Fed data from KV cache.
@@ -50,7 +50,7 @@ export async function refreshData(env: App.Env): Promise<void> {
 
   try {
     const theData = await fetchData();
-    const theMeetingTime = getMeetingTime();
+    const theMeetingTime = await getMeetingTime();
 
     const fedData: FedData = {
       rateProbs: theData.rateProbs,

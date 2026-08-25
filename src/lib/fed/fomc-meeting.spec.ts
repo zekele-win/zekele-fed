@@ -15,7 +15,7 @@ describe("getMeetingTime", () => {
     },
     {
       name: "should throw with out of range date",
-      currentTime: new Date("2027-02-15T18:00Z").getTime(),
+      currentTime: new Date("9927-02-15T18:00Z").getTime(),
     },
   ];
 
