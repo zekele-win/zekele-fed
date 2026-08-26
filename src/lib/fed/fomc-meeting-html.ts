@@ -5,8 +5,7 @@
  * All times are in UTC.
  */
 
-const URL =
-  "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.HTML";
+const URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm";
 
 /**
  * Fetch the Federal Open Market Committee HTML page.
