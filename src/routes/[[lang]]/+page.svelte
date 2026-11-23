@@ -86,9 +86,9 @@
       return i18n.noChangeProbability;
     }
     if (rateProb.deltaRate > 0) {
-      return `${i18n.hikeProbability} ${rateProb.deltaRate} bps`;
+      return `${i18n.hikeProbability} ${rateProb.deltaRate} ${i18n.bps}`;
     } else {
-      return `${i18n.cutProbability} ${Math.abs(rateProb.deltaRate)} bps`;
+      return `${i18n.cutProbability} ${Math.abs(rateProb.deltaRate)} ${i18n.bps}`;
     }
   };
 

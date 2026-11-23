@@ -11,6 +11,7 @@ export default {
   cutProbability: "降息",
   noChangeProbability: "維持不變",
   hikeProbability: "加息",
+  bps: "個基點",
 
   cutProbabilityDescription: {
     prefix: "降息 ",

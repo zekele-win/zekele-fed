@@ -12,6 +12,9 @@ export const GET: RequestHandler = async ({ url }) => {
 - [日本語](${origin}/ja)
 - [简体中文](${origin}/zh-hans)
 - [繁體中文](${origin}/zh-hant)
+- [한국어](${origin}/ko)
+- [Español](${origin}/es)
+- [Português](${origin}/pt)
 `;
 
   return new Response(content, {

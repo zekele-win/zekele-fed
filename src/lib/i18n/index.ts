@@ -1,11 +1,17 @@
 import en from "./en";
+import es from "./es";
+import pt from "./pt";
 import ja from "./ja";
+import ko from "./ko";
 import zh_hans from "./zh-hans";
 import zh_hant from "./zh-hant";
 
 export default {
   en,
+  es,
+  pt,
   ja,
+  ko,
   "zh-hans": zh_hans,
   "zh-hant": zh_hant,
 };
@@ -16,10 +22,25 @@ export const langs = {
     aliases: ["en-us", "en-gb", "en-ca", "en-au"],
     uri: "",
   },
+  es: {
+    name: "Español",
+    aliases: ["es-es", "es-419", "es-mx", "es-ar", "es-cl", "es-co"],
+    uri: "es",
+  },
+  pt: {
+    name: "Português",
+    aliases: ["pt-br", "pt-pt"],
+    uri: "pt",
+  },
   ja: {
     name: "日本語",
     aliases: ["ja-jp"],
     uri: "ja",
+  },
+  ko: {
+    name: "한국어",
+    aliases: ["ko-kr"],
+    uri: "ko",
   },
   "zh-hans": {
     name: "简体中文",

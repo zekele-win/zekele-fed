@@ -11,6 +11,7 @@ export default {
   cutProbability: "利下げ",
   noChangeProbability: "据え置き",
   hikeProbability: "利上げ",
+  bps: "bp",
 
   cutProbabilityDescription: {
     prefix: "",

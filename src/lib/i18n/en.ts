@@ -11,6 +11,7 @@ export default {
   cutProbability: "Cut",
   noChangeProbability: "Hold",
   hikeProbability: "Hike",
+  bps: "bps",
 
   cutProbabilityDescription: {
     prefix: "Probability of a ",
