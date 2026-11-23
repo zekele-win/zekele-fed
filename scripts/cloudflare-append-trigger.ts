@@ -38,6 +38,13 @@ export default function plugin(): Plugin {
       // Read generated worker content
       let content = fs.readFileSync(workerPath, "utf-8");
 
+      // Idempotency guard: skip if already appended (e.g. a prior test run or
+      //   repeated build would otherwise duplicate the `scheduled` import and
+      //   break the wrangler build with "symbol already declared").
+      if (content.includes("worker_default.scheduled = scheduled")) {
+        return;
+      }
+
       // Import the scheduled function from the compiled hooks file
       //   and attach it to the worker default export.
       // This enables Cloudflare cron triggers to invoke it.
