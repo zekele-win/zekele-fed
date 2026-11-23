@@ -64,6 +64,33 @@ export function findLangByParam(param?: string | null): Lang | null {
   return null;
 }
 
+/**
+ * Resolve a language from a route param, including aliases.
+ *
+ * - Empty / undefined param -> default language (`defLang`)
+ * - Exact canonical key (e.g. "ja", "zh-hans") -> that language
+ * - Alias (e.g. "zh-cn", "en-us") -> its canonical language
+ * - Unknown -> null
+ */
+export function resolveLangByParam(param?: string | null): Lang | null {
+  const lang = findLangByParam(param);
+  if (lang) {
+    return lang;
+  }
+
+  if (param) {
+    const lower = param.toLowerCase();
+    for (const key in langs) {
+      const l = key as Lang;
+      if (langs[l].aliases.includes(lower)) {
+        return l;
+      }
+    }
+  }
+
+  return null;
+}
+
 export function findLangByCookie(cookie?: string | null): Lang | null {
   if (!cookie) {
     return null;

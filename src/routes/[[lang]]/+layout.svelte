@@ -33,34 +33,7 @@
     return `/${langs[theLang as Lang].uri}`;
   };
 
-  const ogImageUrl = `${page.url.origin}/og/image?lang=${lang}`;
-
-  const jsonLdString = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Web",
-
-    inLanguage: lang,
-
-    name: i18n.title,
-    description: i18n.desc,
-
-    url: page.url.href,
-    image: `${ogImageUrl}`,
-
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-
-    author: {
-      "@type": "Organization",
-      name: "Zekele",
-      url: `${links.x}`,
-    },
-  });
+  const ogImageUrl = `${page.url.origin}/og/og-${lang}.png`;
 </script>
 
 <svelte:head>
@@ -85,8 +58,6 @@
   {#each Object.keys(langs) as v}
     <link rel="alternate" hreflang={v} href={makeHreflang(v)} />
   {/each}
-
-  {@html `<script type="application/ld+json">${jsonLdString}<\/script>`}
 </svelte:head>
 
 {#snippet languageItems()}

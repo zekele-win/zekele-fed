@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { findLangByParam, findLangByCookie, findLangByAccept } from "./index";
+import {
+  findLangByParam,
+  findLangByCookie,
+  findLangByAccept,
+  resolveLangByParam,
+} from "./index";
 
 describe("findLangByParam", () => {
   const cases = [
@@ -245,6 +250,62 @@ describe("findLangByAccept", () => {
   cases.forEach(({ name, accept, expected }) => {
     it(name, () => {
       expect(findLangByAccept(accept)).toBe(expected);
+    });
+  });
+});
+
+describe("resolveLangByParam", () => {
+  const cases = [
+    {
+      name: "should resolve empty param to default",
+      param: undefined,
+      expected: "en",
+    },
+    {
+      name: "should resolve canonical key (ja)",
+      param: "ja",
+      expected: "ja",
+    },
+    {
+      name: "should resolve default key (en)",
+      param: "en",
+      expected: "en",
+    },
+    {
+      name: "should resolve alias en-us to en",
+      param: "en-us",
+      expected: "en",
+    },
+    {
+      name: "should resolve alias en-GB (case) to en",
+      param: "en-GB",
+      expected: "en",
+    },
+    {
+      name: "should resolve alias zh-cn to zh-hans",
+      param: "zh-cn",
+      expected: "zh-hans",
+    },
+    {
+      name: "should resolve alias zh-TW (case) to zh-hant",
+      param: "zh-TW",
+      expected: "zh-hant",
+    },
+    {
+      name: "should resolve alias ja-jp to ja",
+      param: "ja-jp",
+      expected: "ja",
+    },
+    {
+      name: "should return null for unknown",
+      param: "abcd",
+      expected: null,
+    },
+  ];
+
+  cases.forEach(({ name, param, expected }) => {
+    it(name, () => {
+      expect(resolveLangByParam(param)).toBe(expected);
     });
   });
 });
