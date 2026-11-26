@@ -346,9 +346,8 @@
     <h2 class="sr-only" id="about-fed-probabilities">{i18n.about.heading}</h2>
     <details
       class="collapse collapse-arrow border-b border-base-300 rounded-none"
-      open
     >
-      <summary class="collapse-title font-medium">{i18n.about.what.title}</summary>
+      <summary class="collapse-title">{i18n.about.what.title}</summary>
       <div class="collapse-content text-sm text-base-content/80">
         <p>{i18n.about.what.body}</p>
       </div>
@@ -356,13 +355,13 @@
     <details
       class="collapse collapse-arrow border-b border-base-300 rounded-none"
     >
-      <summary class="collapse-title font-medium">{i18n.about.how.title}</summary>
+      <summary class="collapse-title">{i18n.about.how.title}</summary>
       <div class="collapse-content text-sm text-base-content/80">
         <p>{i18n.about.how.body}</p>
       </div>
     </details>
     <details class="collapse collapse-arrow rounded-none">
-      <summary class="collapse-title font-medium">{i18n.about.read.title}</summary>
+      <summary class="collapse-title">{i18n.about.read.title}</summary>
       <div class="collapse-content text-sm text-base-content/80">
         <p>{i18n.about.read.body}</p>
       </div>
